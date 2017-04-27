@@ -1,0 +1,4 @@
+conf/
+.dockerignore
+Dockerfile
+._DS_Store
