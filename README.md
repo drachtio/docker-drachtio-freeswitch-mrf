@@ -4,7 +4,7 @@ A slim Freeswitch 1.6 image (539 MB) designed for use with [drachtio-fsmrf](http
 
 To run with default options:
 ```bash
-docker run -d --name FS1 --net=host drachtio/drachtio-freeswitch-mrf freeswitch 
+docker run -d --rm --name FS1 --net=host drachtio/drachtio-freeswitch-mrf freeswitch 
 ```
 To jump in to a running container with a freeswitch console:
 ```bash
@@ -24,7 +24,7 @@ Additionally, it exposes the Freeswitch log, sounds, and recordings directory to
 
 An example of starting a container with advanced options:
 ```bash
-docker run -d --name FS1 --net=host \
+docker run -d --rm --name FS1 --net=host \
 -v /home/deploy/log:/usr/local/freeswitch/log  \
 -v /home/deploy/sounds:/usr/local/freeswitch/sounds \
 -v /home/deploy/recordings:/usr/local/freeswitch/recordings \
