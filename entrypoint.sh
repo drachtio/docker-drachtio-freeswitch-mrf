@@ -38,7 +38,7 @@ while :; do
 
   --ext-rtp-ip)
     if [ -n "$2" ]; then
-      sed -i -e "s/ext_rtp_ip=auto-nat/ext_rtp_ip=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
+      sed -i -e "s/ext_rtp_ip=.*\"/ext_rtp_ip=$2\"/g" /usr/local/freeswitch/conf/vars_diff.xml
     fi
     ;;
 
