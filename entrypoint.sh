@@ -36,9 +36,9 @@ while :; do
     fi
     ;;
 
-  --ext-sip-ip)
+  --ext-rtp-ip)
     if [ -n "$2" ]; then
-      sed -i -e "s/ext_sip_ip=auto-nat/ext_sip_ip=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
+      sed -i -e "s/ext_rtp_ip=auto-nat/ext_rtp_ip=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
     fi
     ;;
 
