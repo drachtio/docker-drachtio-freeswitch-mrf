@@ -42,6 +42,12 @@ while :; do
     fi
     ;;
 
+  --ext-sip-ip)
+    if [ -n "$2" ]; then
+      sed -i -e "s/ext_sip_ip=.*\"/ext_sip_ip=$2\"/g" /usr/local/freeswitch/conf/vars_diff.xml
+    fi
+    ;;
+
   -p|--password)
     if [ -n "$2" ]; then
       sed -i -e "s/password=.*\"/password=$2\"/g" /usr/local/freeswitch/conf/vars_diff.xml
