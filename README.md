@@ -28,5 +28,5 @@ docker run -d --rm --name FS1 --net=host \
 -v /home/deploy/log:/usr/local/freeswitch/log  \
 -v /home/deploy/sounds:/usr/local/freeswitch/sounds \
 -v /home/deploy/recordings:/usr/local/freeswitch/recordings \
-drachtio/freeswitch-simple-record freeswitch --sip-port 5038 --tls-port 5039 --rtp-range-start 20000 --rtp-range-end 21000
+drachtio/drachtio-freeswitch-mrf freeswitch --sip-port 5038 --tls-port 5039 --rtp-range-start 20000 --rtp-range-end 21000
 ```
