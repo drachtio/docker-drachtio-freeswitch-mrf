@@ -8,7 +8,7 @@ docker run -d --rm --name FS1 --net=host drachtio/drachtio-freeswitch-mrf freesw
 ```
 To jump in to a running container with a freeswitch console:
 ```bash
-docker exec -ti FS1 fs_cli
+docker exec -ti FS1 fs_cli -P 8021
 ```
 > Note: you can also jump into the container with `/bin/bash` instead of `fs_cli` to get a shell prompt.
 
