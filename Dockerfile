@@ -1,4 +1,4 @@
-FROM drachtio/drachtio-freeswitch-base:latest
+FROM drachtio/drachtio-freeswitch-base:grpc
 
 COPY ./entrypoint.sh /
 
