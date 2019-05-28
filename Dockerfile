@@ -1,6 +1,7 @@
 FROM drachtio/drachtio-freeswitch-base:grpc
 
 COPY ./entrypoint.sh /
+COPY ./freeswitch.xml /usr/local/freeswitch/conf/freeswitch.xml
 
 VOLUME ["/usr/local/freeswitch/log", "/usr/local/freeswitch/recordings", "/usr/local/freeswitch/sounds"]
 
