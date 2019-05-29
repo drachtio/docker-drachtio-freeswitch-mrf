@@ -1,4 +1,4 @@
-FROM drachtio/drachtio-freeswitch-base:grpc
+FROM drachtio/drachtio-freeswitch-base:grpc-0.2.0
 
 COPY ./entrypoint.sh /
 COPY ./freeswitch.xml /usr/local/freeswitch/conf/freeswitch.xml
