@@ -4,6 +4,7 @@ set -e
 if [ "$1" = 'freeswitch' ]; then
   shift
 
+sed -i -e "s/name=\"listen-ip\" value=\".*\"/name=\"listen-ip\" value=\"0.0.0.0\"/g" /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
 while :; do
   case $1 in 
   -s|--sip-port)
@@ -20,19 +21,19 @@ while :; do
 
   -e|--event-socket-port)
     if [ -n "$2" ]; then
-      sed -i -e "s/event_socket_port=[[:digit:]]\+/event_socket_port=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
+      sed -i -e "s/name=\"listen-port\" value=\"8021\"/name=\"listen-port\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
     fi
     ;;
 
   -a|--rtp-range-start)
     if [ -n "$2" ]; then
-      sed -i -e "s/rtp_range_start=[[:digit:]]\+/rtp_range_start=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
+      sed -i -e "s/name=\"rtp-start-port\" value=\"16384\"/name=\"rtp-start-port\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/switch.conf.xml
     fi
     ;;
 
   -z|--rtp-range-end)
     if [ -n "$2" ]; then
-      sed -i -e "s/rtp_range_end=[[:digit:]]\+/rtp_range_end=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
+      sed -i -e "s/name=\"rtp-end-port\" value=\"32768\"/name=\"rtp-end-port\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/switch.conf.xml
     fi
     ;;
 
@@ -50,7 +51,7 @@ while :; do
 
   -p|--password)
     if [ -n "$2" ]; then
-      sed -i -e "s/password=.*\"/password=$2\"/g" /usr/local/freeswitch/conf/vars_diff.xml
+      sed -i -e "s/name=\"password\" value=\"ClueCon\"/name=\"password\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
     fi
     ;;
 
