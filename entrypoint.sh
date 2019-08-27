@@ -11,52 +11,74 @@ if [ "$1" = 'freeswitch' ]; then
 
 while :; do
   case $1 in 
+  -g|--g711-only)
+      sed -i -e "s/global_codec_prefs=.*\"/global_codec_prefs=PCMU,PCMA\"/g" /usr/local/freeswitch/conf/vars.xml
+      sed -i -e "s/outbound_codec_prefs=.*\"/outbound_codec_prefs=PCMU,PCMA\"/g" /usr/local/freeswitch/conf/vars.xml
+    shift
+    ;;
+
   -s|--sip-port)
     if [ -n "$2" ]; then
       sed -i -e "s/sip_port=[[:digit:]]\+/sip_port=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
     fi
+    shift
+    shift
     ;;
 
   -t|--tls-port)
     if [ -n "$2" ]; then
       sed -i -e "s/tls_port=[[:digit:]]\+/tls_port=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
     fi
+    shift
+    shift
     ;;
 
   -e|--event-socket-port)
     if [ -n "$2" ]; then
       sed -i -e "s/name=\"listen-port\" value=\"8021\"/name=\"listen-port\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
     fi
+    shift
+    shift
     ;;
 
   -a|--rtp-range-start)
     if [ -n "$2" ]; then
       sed -i -e "s/name=\"rtp-start-port\" value=\"16384\"/name=\"rtp-start-port\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/switch.conf.xml
     fi
+    shift
+    shift
     ;;
 
   -z|--rtp-range-end)
     if [ -n "$2" ]; then
       sed -i -e "s/name=\"rtp-end-port\" value=\"32768\"/name=\"rtp-end-port\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/switch.conf.xml
     fi
+    shift
+    shift
     ;;
 
   --ext-rtp-ip)
     if [ -n "$2" ]; then
       sed -i -e "s/ext_rtp_ip=.*\"/ext_rtp_ip=$2\"/g" /usr/local/freeswitch/conf/vars_diff.xml
     fi
+    shift
+    shift
     ;;
 
   --ext-sip-ip)
     if [ -n "$2" ]; then
       sed -i -e "s/ext_sip_ip=.*\"/ext_sip_ip=$2\"/g" /usr/local/freeswitch/conf/vars_diff.xml
     fi
+    shift
+    shift
     ;;
 
   -p|--password)
     if [ -n "$2" ]; then
       sed -i -e "s/name=\"password\" value=\"ClueCon\"/name=\"password\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
     fi
+    shift
+    shift
     ;;
 
   --)
@@ -67,9 +89,6 @@ while :; do
   *)
     break
   esac
-
-  shift
-  shift
 
 done
     exec freeswitch "$@"
