@@ -21,6 +21,7 @@
       <param name="enable-timer" value="false"/>
       <param name="user-agent-string" value="drachtio MRF"/>
       <param name="apply-nat-acl" value="nat.auto"/>
+      <param name="local-network-acl" value="nat.auto"/>
       <param name="context" value="mrf"/>
       <param name="rtp-timer-name" value="soft"/>
       <param name="codec-prefs" value="$${global_codec_prefs}"/>
