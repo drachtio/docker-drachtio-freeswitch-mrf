@@ -41,7 +41,7 @@ An exmaple of starting a container with docker-compose file:
 
 ```
 FS1:
-  image: drachtio/drachtio-freeswitch-base:latest
+  image: drachtio/drachtio-freeswitch-mrf:latest
   container_name: FS1
   volumes:
     - ./freeswitch/sounds:/usr/local/freeswitch/sounds
