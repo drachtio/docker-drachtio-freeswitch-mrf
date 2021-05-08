@@ -4,7 +4,7 @@ A slim Freeswitch 1.8 image (~127 MB) designed for use with [drachtio-fsmrf](htt
 
 To run with default options:
 ```bash
-docker run -d --rm --name FS1 drachtio/drachtio-freeswitch-mrf freeswitch 
+docker run -d --rm --name FS1 drachtio/drachtio-freeswitch-mrf freeswitch
 ```
 To jump in to a running container with a freeswitch console:
 ```bash
@@ -23,9 +23,10 @@ This container supports the ability to configure the various ports Freeswitch cl
 * --sip-port the sip port to listen on (default: 5080)
 * --tls-port the tls port to listen on (default: 5081)
 * --event-socket-port the port that Freeswitch event socket listens on (default: 8021)
+* --username freeSwitch username (default: freeSwitch)
 * --password the event socket password (default: ClueCon)
-* --rtp-range-start the starting UDP port for RTP traffic
-* --rtp-range-end the ending UDP port for RTP traffic
+* --rtp-range-start the starting UDP port for RTP traffic (default: 16384)
+* --rtp-range-end the ending UDP port for RTP traffic (default: 32767)
 
 An example of starting a container with advanced options:
 ```bash
@@ -34,6 +35,33 @@ docker run -d --rm --name FS1 --net=host \
 -v /home/deploy/sounds:/usr/local/freeswitch/sounds \
 -v /home/deploy/recordings:/usr/local/freeswitch/recordings \
 drachtio/drachtio-freeswitch-mrf freeswitch --sip-port 5038 --tls-port 5039 --rtp-range-start 20000 --rtp-range-end 21000
+```
+
+An exmaple of starting a container with docker-compose file:
+
+```
+FS1:
+  image: drachtio/drachtio-freeswitch-base:latest
+  container_name: FS1
+  volumes:
+    - ./freeswitch/sounds:/usr/local/freeswitch/sounds
+    - ./freeswitch/recordings:/usr/local/freeswitch/recordings
+    - ./freeswitch/log:/usr/local/freeswitch/log
+  restart: unless-stopped
+  network_mode: host
+  environment:
+    USERNAME: freeSwitch
+    PASSWORD: ClueCon
+    EVENT_SOCKET_PORT: 8021
+    SIP_PORT: 5038
+    TLS_PORT: 5039
+    RTP_RANGE_START: 20000
+    RTP_RANGE_END: 21000
+  logging:
+    driver: 'json-file'
+    options:
+      max-file: '5'
+      max-size: '10m'
 ```
 
 
