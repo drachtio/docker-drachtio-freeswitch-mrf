@@ -5,12 +5,13 @@
       <domain name="all" alias="true" parse="false"/>
     </domains>
     <settings>
+      <param name="username" value="freeSwitch"/>
       <param name="sip-trace" value="yes"/>
       <param name="rfc2833-pt" value="101"/>
 
       <!-- should be able to be removed in v1.6.8 or later (ref: https://freeswitch.org/jira/browse/FS-9051) -->
       <param name="dtmf-type" value="rfc2833"/>
-      
+
       <param name="inbound-late-negotiation" value="true"/>
       <param name="rtp-ip" value="$${local_ip_v4}"/>
       <param name="sip-ip" value="$${local_ip_v4}"/>
