@@ -1,0 +1,12 @@
+<!-- http://wiki.freeswitch.org/wiki/Dialplan_XML -->
+<include>
+  <context name="internal">
+
+    <extension name="play_file_from_header">
+ 		<condition field="destination_number" expression="^(\d{4})$">
+     		<action application="answer" />
+     		<action application="playback" data="${sip_h_X-PlayFileLoc}" />
+		</condition>
+	</extension>
+  </context>
+</include>

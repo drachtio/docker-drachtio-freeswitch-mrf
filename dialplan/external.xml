@@ -1,0 +1,11 @@
+<!-- http://wiki.freeswitch.org/wiki/Dialplan_XML -->
+<include>
+  <context name="external">
+
+  	<extension name="route_to_play">
+		<condition field="destination_number" expression="^(\d{4})$">
+     		<action application="transfer" data="$1 XML internal"/>
+   		</condition>
+ 	</extension>
+  </context>
+</include>

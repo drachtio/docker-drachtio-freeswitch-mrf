@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<include>
+  <profile name="internal">
+    <domains>
+      <domain name="all" alias="true" parse="false"/>
+    </domains>
+    <settings>
+      <param name="sip-trace" value="yes"/>
+      <param name="rfc2833-pt" value="101"/>
+
+      <!-- should be able to be removed in v1.6.8 or later (ref: https://freeswitch.org/jira/browse/FS-9051) -->
+      <param name="dtmf-type" value="rfc2833"/>
+      
+      <param name="inbound-late-negotiation" value="true"/>
+      <param name="rtp-ip" value="$${local_ip_v4}"/>
+      <param name="sip-ip" value="$${local_ip_v4}"/>
+      <param name="sip-port" value="5036"/>
+      <param name="ext-rtp-ip" value="$${ext_rtp_ip}"/>
+      <param name="ext-sip-ip" value="$${ext_sip_ip}"/>
+      <param name="auth-calls" value="false"/>
+      <param name="enable-timer" value="false"/>
+      <param name="user-agent-string" value="drachtio MRF"/>
+      <param name="apply-nat-acl" value="nat.auto"/>
+      <param name="local-network-acl" value="nat.auto"/>
+      <param name="context" value="internal"/>
+      <param name="rtp-timer-name" value="soft"/>
+      <param name="codec-prefs" value="OPUS,G722,PCMU,PCMA,H264,VP8"/>
+      <param name="inbound-codec-negotiation" value="greedy"/>
+      <param name="inbound-reg-force-matching-username" value="false"/>
+      <param name="nonce-ttl" value="86400"/>
+      <param name="manage-presence" value="false"/>
+
+      <param name="enable-3pcc" value="true"/>
+    </settings>
+  </profile>
+</include>
