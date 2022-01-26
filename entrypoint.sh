@@ -81,6 +81,17 @@ while :; do
     shift
     ;;
 
+  --codec-answer-generous)
+    sed -i -e "s/inbound-codec-negotiation\" value=\"greedy/inbound-codec-negotiation\" value=\"generous"/g /usr/local/freeswitch/conf/sip_profiles/mrf.xml
+    shift
+    ;;
+
+  --advertise-external-ip)
+    sed -i -e "s/ext-sip-ip\" value=\".*\"/ext-sip-ip\" value=\"\$\${ext_sip_ip}\""/g /usr/local/freeswitch/conf/sip_profiles/mrf.xml
+    sed -i -e "s/ext-rtp-ip\" value=\".*\"/ext-rtp-ip\" value=\"\$\${ext_rtp_ip}\""/g /usr/local/freeswitch/conf/sip_profiles/mrf.xml
+    shift
+    ;;
+
   --)
     shift
     break
