@@ -40,6 +40,8 @@
   <X-PRE-PROCESS cmd="include" data="vars.xml"/>
   <X-PRE-PROCESS cmd="set" data="rtp_video_max_bandwidth_in=6mb"/>
   <X-PRE-PROCESS cmd="set" data="rtp_video_max_bandwidth_out=6mb"/>
+  <X-PRE-PROCESS cmd="set" data="global_codec_prefs=OPUS,G722,PCMU,PCMA,H264"/>
+  <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=OPUS,G722,PCMU,PCMA,H264"/>
 
   <section name="configuration" description="Various Configuration">
     <X-PRE-PROCESS cmd="include" data="autoload_configs/*.xml"/>

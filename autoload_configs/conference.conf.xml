@@ -146,7 +146,7 @@
       <param name="interval" value="20"/>
       <param name="energy-level" value="100"/>
       <param name="video-mode" value="mux" />
-      <param name="video-layout-name" value="1x1"/>
+      <param name="video-layout-name" value="grid"/>
       <param name="video-canvas-size" value="1280x720"/>
       <param name="video-fps" value="30"/>
       <param name="video-codec-bandwidth" value="4mb"/>      
