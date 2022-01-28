@@ -75,7 +75,7 @@ while :; do
 
   -p|--password)
     if [ -n "$2" ]; then
-      sed -i -e "s/name=\"password\" value=\"ClueCon\"/name=\"password\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
+      sed -i -e "s/name=\"password\" value=\"JambonzR0ck$\"/name=\"password\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
     fi
     shift
     shift
