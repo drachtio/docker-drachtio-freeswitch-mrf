@@ -1,4 +1,4 @@
-FROM drachtio/drachtio-freeswitch-base:0.4.0
+FROM drachtio/drachtio-freeswitch-base:0.4.1
 
 COPY ./entrypoint.sh /
 COPY ./vars_diff.xml  /usr/local/freeswitch/conf/vars_diff.xml
