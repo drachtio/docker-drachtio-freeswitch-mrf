@@ -1,7 +1,7 @@
 FROM lylepratt/drachtio-freeswitch-base:latest
 
 ENV MNT_POINT /var/s3fs
-ENV S3_BUCKET vidamedia
+ENV S3_BUCKET vidamail
 
 RUN apt-get update && apt-get install -y --quiet s3fs awscli
 
