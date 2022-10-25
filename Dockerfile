@@ -1,11 +1,18 @@
 FROM lylepratt/drachtio-freeswitch-base:latest
 
 ENV MNT_POINT /var/s3fs
+ENV COPY_POINT /var/pres3fs
 ENV S3_BUCKET vidamedia
 
-RUN apt-get update && apt-get install -y --quiet s3fs awscli
+RUN apt-get update && apt-get install -y --quiet s3fs awscli incron
 
 RUN mkdir -p "$MNT_POINT"
+RUN mkdir -p "$COPY_POINT"
+RUN echo "root" >> /etc/incron.allow
+ADD incron.conf /var/monitor_incron.conf
+RUN incrontab /var/monitor_incron.conf
+RUN /etc/init.d/incron start
+
 
 COPY ./entrypoint.sh /
 COPY ./vars_diff.xml  /usr/local/freeswitch/conf/vars_diff.xml
