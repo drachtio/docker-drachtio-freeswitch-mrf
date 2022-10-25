@@ -4,14 +4,13 @@ ENV MNT_POINT /var/s3fs
 ENV COPY_POINT /var/pres3fs
 ENV S3_BUCKET vidamedia
 
-RUN apt-get update && apt-get install -y --quiet s3fs awscli incron
+RUN apt-get update && apt-get install -y --quiet s3fs awscli incron rsyslog
 
 RUN mkdir -p "$MNT_POINT"
 RUN mkdir -p "$COPY_POINT"
-RUN echo "root" >> /etc/incron.allow
+RUN rm /etc/incron.allow
 ADD incron.conf /var/monitor_incron.conf
 RUN incrontab /var/monitor_incron.conf
-RUN /etc/init.d/incron start
 
 
 COPY ./entrypoint.sh /
