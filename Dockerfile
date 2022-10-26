@@ -17,6 +17,7 @@ COPY ./entrypoint.sh /
 COPY ./vars_diff.xml  /usr/local/freeswitch/conf/vars_diff.xml
 COPY ./freeswitch.xml /usr/local/freeswitch/conf/freeswitch.xml
 COPY ./autoload_configs/conference.conf.xml /usr/local/freeswitch/conf/autoload_configs/conference.conf.xml
+COPY ./autoload_configs/conference_layouts.conf.xml /usr/local/freeswitch/conf/autoload_configs/conference_layouts.conf.xml
 
 VOLUME ["/usr/local/freeswitch/log", "/usr/local/freeswitch/recordings", "/usr/local/freeswitch/sounds"]
 
