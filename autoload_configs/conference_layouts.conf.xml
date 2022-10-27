@@ -48,135 +48,135 @@
 				<image x="270" y="270" scale="90" reservation_id="Standard-16"/>
       </layout>
       <layout name="5x5" auto-3d-position="true">
-				<image x="0" y="0" scale="72"/>
-				<image x="72" y="0" scale="72"/>
-				<image x="144" y="0" scale="72"/>
-				<image x="216" y="0" scale="72"/>
-				<image x="288" y="0" scale="72"/>
-				<image x="0" y="72" scale="72"/>
-				<image x="72" y="72" scale="72"/>
-				<image x="144" y="72" scale="72"/>
-				<image x="216" y="72" scale="72"/>
-				<image x="288" y="72" scale="72"/>
-				<image x="0" y="144" scale="72"/>
-				<image x="72" y="144" scale="72"/>
-				<image x="144" y="144" scale="72"/>
-				<image x="216" y="144" scale="72"/>
-				<image x="288" y="144" scale="72"/>
-				<image x="0" y="216" scale="72"/>
-				<image x="72" y="216" scale="72"/>
-				<image x="144" y="216" scale="72"/>
-				<image x="216" y="216" scale="72"/>
-				<image x="288" y="216" scale="72"/>
-				<image x="0" y="288" scale="72"/>
-				<image x="72" y="288" scale="72"/>
-				<image x="144" y="288" scale="72"/>
-				<image x="216" y="288" scale="72"/>
-				<image x="288" y="288" scale="72"/>
+				<image x="0" y="0" scale="72" reservation_id="Standard-1"/>
+				<image x="72" y="0" scale="72" reservation_id="Standard-2"/>
+				<image x="144" y="0" scale="72" reservation_id="Standard-3"/>
+				<image x="216" y="0" scale="72" reservation_id="Standard-4"/>
+				<image x="288" y="0" scale="72" reservation_id="Standard-5"/>
+				<image x="0" y="72" scale="72" reservation_id="Standard-6"/>
+				<image x="72" y="72" scale="72" reservation_id="Standard-7"/>
+				<image x="144" y="72" scale="72" reservation_id="Standard-8"/>
+				<image x="216" y="72" scale="72" reservation_id="Standard-9"/>
+				<image x="288" y="72" scale="72" reservation_id="Standard-10"/>
+				<image x="0" y="144" scale="72" reservation_id="Standard-11"/>
+				<image x="72" y="144" scale="72" reservation_id="Standard-12"/>
+				<image x="144" y="144" scale="72" reservation_id="Standard-13"/>
+				<image x="216" y="144" scale="72" reservation_id="Standard-14"/>
+				<image x="288" y="144" scale="72" reservation_id="Standard-15"/>
+				<image x="0" y="216" scale="72" reservation_id="Standard-16"/>
+				<image x="72" y="216" scale="72" reservation_id="Standard-17"/>
+				<image x="144" y="216" scale="72" reservation_id="Standard-18"/>
+				<image x="216" y="216" scale="72" reservation_id="Standard-19"/>
+				<image x="288" y="216" scale="72" reservation_id="Standard-20"/>
+				<image x="0" y="288" scale="72" reservation_id="Standard-21"/>
+				<image x="72" y="288" scale="72" reservation_id="Standard-22"/>
+				<image x="144" y="288" scale="72" reservation_id="Standard-23"/>
+				<image x="216" y="288" scale="72" reservation_id="Standard-24"/>
+				<image x="288" y="288" scale="72" reservation_id="Standard-25"/>
       </layout>
       <layout name="6x6" auto-3d-position="true">
-				<image x="0" y="0" scale="60"/>
-				<image x="60" y="0" scale="60"/>
-				<image x="120" y="0" scale="60"/>
-				<image x="180" y="0" scale="60"/>
-				<image x="240" y="0" scale="60"/>
-				<image x="300" y="0" scale="60"/>
-				<image x="0" y="60" scale="60"/>
-				<image x="60" y="60" scale="60"/>
-				<image x="120" y="60" scale="60"/>
-				<image x="180" y="60" scale="60"/>
-				<image x="240" y="60" scale="60"/>
-				<image x="300" y="60" scale="60"/>
-				<image x="0" y="120" scale="60"/>
-				<image x="60" y="120" scale="60"/>
-				<image x="120" y="120" scale="60"/>
-				<image x="180" y="120" scale="60"/>
-				<image x="240" y="120" scale="60"/>
-				<image x="300" y="120" scale="60"/>
-				<image x="0" y="180" scale="60"/>
-				<image x="60" y="180" scale="60"/>
-				<image x="120" y="180" scale="60"/>
-				<image x="180" y="180" scale="60"/>
-				<image x="240" y="180" scale="60"/>
-				<image x="300" y="180" scale="60"/>
-				<image x="0" y="240" scale="60"/>
-				<image x="60" y="240" scale="60"/>
-				<image x="120" y="240" scale="60"/>
-				<image x="180" y="240" scale="60"/>
-				<image x="240" y="240" scale="60"/>
-				<image x="300" y="240" scale="60"/>
-				<image x="0" y="300" scale="60"/>
-				<image x="60" y="300" scale="60"/>
-				<image x="120" y="300" scale="60"/>
-				<image x="180" y="300" scale="60"/>
-				<image x="240" y="300" scale="60"/>
-				<image x="300" y="300" scale="60"/>
+				<image x="0" y="0" scale="60" reservation_id="Standard-1"/>
+				<image x="60" y="0" scale="60" reservation_id="Standard-2"/>
+				<image x="120" y="0" scale="60" reservation_id="Standard-3"/>
+				<image x="180" y="0" scale="60" reservation_id="Standard-4"/>
+				<image x="240" y="0" scale="60" reservation_id="Standard-5"/>
+				<image x="300" y="0" scale="60" reservation_id="Standard-6"/>
+				<image x="0" y="60" scale="60" reservation_id="Standard-7"/>
+				<image x="60" y="60" scale="60" reservation_id="Standard-8"/>
+				<image x="120" y="60" scale="60" reservation_id="Standard-9"/>
+				<image x="180" y="60" scale="60" reservation_id="Standard-10"/>
+				<image x="240" y="60" scale="60" reservation_id="Standard-11"/>
+				<image x="300" y="60" scale="60" reservation_id="Standard-12"/>
+				<image x="0" y="120" scale="60" reservation_id="Standard-13"/>
+				<image x="60" y="120" scale="60" reservation_id="Standard-14"/>
+				<image x="120" y="120" scale="60" reservation_id="Standard-15"/>
+				<image x="180" y="120" scale="60" reservation_id="Standard-16"/>
+				<image x="240" y="120" scale="60" reservation_id="Standard-17"/>
+				<image x="300" y="120" scale="60" reservation_id="Standard-18"/>
+				<image x="0" y="180" scale="60" reservation_id="Standard-19"/>
+				<image x="60" y="180" scale="60" reservation_id="Standard-20"/>
+				<image x="120" y="180" scale="60" reservation_id="Standard-21"/>
+				<image x="180" y="180" scale="60" reservation_id="Standard-22"/>
+				<image x="240" y="180" scale="60" reservation_id="Standard-23"/>
+				<image x="300" y="180" scale="60" reservation_id="Standard-24"/>
+				<image x="0" y="240" scale="60" reservation_id="Standard-25"/>
+				<image x="60" y="240" scale="60" reservation_id="Standard-26"/>
+				<image x="120" y="240" scale="60" reservation_id="Standard-27"/>
+				<image x="180" y="240" scale="60" reservation_id="Standard-28"/>
+				<image x="240" y="240" scale="60" reservation_id="Standard-29"/>
+				<image x="300" y="240" scale="60" reservation_id="Standard-30"/>
+				<image x="0" y="300" scale="60" reservation_id="Standard-31"/>
+				<image x="60" y="300" scale="60" reservation_id="Standard-32"/>
+				<image x="120" y="300" scale="60" reservation_id="Standard-33"/>
+				<image x="180" y="300" scale="60" reservation_id="Standard-34"/>
+				<image x="240" y="300" scale="60" reservation_id="Standard-35"/>
+				<image x="300" y="300" scale="60" reservation_id="Standard-36"/>
       </layout>
       <layout name="8x8" auto-3d-position="true">
-				<image x="0" y="0" scale="45"/>
-				<image x="45" y="0" scale="45"/>
-				<image x="90" y="0" scale="45"/>
-				<image x="135" y="0" scale="45"/>
-				<image x="180" y="0" scale="45"/>
-				<image x="225" y="0" scale="45"/>
-				<image x="270" y="0" scale="45"/>
-				<image x="315" y="0" scale="45"/>
-				<image x="0" y="45" scale="45"/>
-				<image x="45" y="45" scale="45"/>
-				<image x="90" y="45" scale="45"/>
-				<image x="135" y="45" scale="45"/>
-				<image x="180" y="45" scale="45"/>
-				<image x="225" y="45" scale="45"/>
-				<image x="270" y="45" scale="45"/>
-				<image x="315" y="45" scale="45"/>
-				<image x="0" y="90" scale="45"/>
-				<image x="45" y="90" scale="45"/>
-				<image x="90" y="90" scale="45"/>
-				<image x="135" y="90" scale="45"/>
-				<image x="180" y="90" scale="45"/>
-				<image x="225" y="90" scale="45"/>
-				<image x="270" y="90" scale="45"/>
-				<image x="315" y="90" scale="45"/>
-				<image x="0" y="135" scale="45"/>
-				<image x="45" y="135" scale="45"/>
-				<image x="90" y="135" scale="45"/>
-				<image x="135" y="135" scale="45"/>
-				<image x="180" y="135" scale="45"/>
-				<image x="225" y="135" scale="45"/>
-				<image x="270" y="135" scale="45"/>
-				<image x="315" y="135" scale="45"/>
-				<image x="0" y="180" scale="45"/>
-				<image x="45" y="180" scale="45"/>
-				<image x="90" y="180" scale="45"/>
-				<image x="135" y="180" scale="45"/>
-				<image x="180" y="180" scale="45"/>
-				<image x="225" y="180" scale="45"/>
-				<image x="270" y="180" scale="45"/>
-				<image x="315" y="180" scale="45"/>
-				<image x="0" y="225" scale="45"/>
-				<image x="45" y="225" scale="45"/>
-				<image x="90" y="225" scale="45"/>
-				<image x="135" y="225" scale="45"/>
-				<image x="180" y="225" scale="45"/>
-				<image x="225" y="225" scale="45"/>
-				<image x="270" y="225" scale="45"/>
-				<image x="315" y="225" scale="45"/>
-				<image x="0" y="270" scale="45"/>
-				<image x="45" y="270" scale="45"/>
-				<image x="90" y="270" scale="45"/>
-				<image x="135" y="270" scale="45"/>
-				<image x="180" y="270" scale="45"/>
-				<image x="225" y="270" scale="45"/>
-				<image x="270" y="270" scale="45"/>
-				<image x="315" y="270" scale="45"/>
-				<image x="0" y="315" scale="45"/>
-				<image x="45" y="315" scale="45"/>
-				<image x="90" y="315" scale="45"/>
-				<image x="135" y="315" scale="45"/>
-				<image x="180" y="315" scale="45"/>
-				<image x="225" y="315" scale="45"/>
-				<image x="270" y="315" scale="45"/>
-				<image x="315" y="315" scale="45"/>
+				<image x="0" y="0" scale="45" reservation_id="Standard-1"/>
+				<image x="45" y="0" scale="45" reservation_id="Standard-2"/>
+				<image x="90" y="0" scale="45" reservation_id="Standard-3"/>
+				<image x="135" y="0" scale="45" reservation_id="Standard-4"/>
+				<image x="180" y="0" scale="45" reservation_id="Standard-5"/>
+				<image x="225" y="0" scale="45" reservation_id="Standard-6"/>
+				<image x="270" y="0" scale="45" reservation_id="Standard-7"/>
+				<image x="315" y="0" scale="45" reservation_id="Standard-8"/>
+				<image x="0" y="45" scale="45" reservation_id="Standard-9"/>
+				<image x="45" y="45" scale="45" reservation_id="Standard-10"/>
+				<image x="90" y="45" scale="45" reservation_id="Standard-11"/>
+				<image x="135" y="45" scale="45" reservation_id="Standard-12"/>
+				<image x="180" y="45" scale="45" reservation_id="Standard-13"/>
+				<image x="225" y="45" scale="45" reservation_id="Standard-14"/>
+				<image x="270" y="45" scale="45" reservation_id="Standard-15"/>
+				<image x="315" y="45" scale="45" reservation_id="Standard-16"/>
+				<image x="0" y="90" scale="45" reservation_id="Standard-17"/>
+				<image x="45" y="90" scale="45" reservation_id="Standard-18"/>
+				<image x="90" y="90" scale="45" reservation_id="Standard-19"/>
+				<image x="135" y="90" scale="45" reservation_id="Standard-20"/>
+				<image x="180" y="90" scale="45" reservation_id="Standard-21"/>
+				<image x="225" y="90" scale="45" reservation_id="Standard-22"/>
+				<image x="270" y="90" scale="45" reservation_id="Standard-23"/>
+				<image x="315" y="90" scale="45" reservation_id="Standard-24"/>
+				<image x="0" y="135" scale="45" reservation_id="Standard-25"/>
+				<image x="45" y="135" scale="45" reservation_id="Standard-26"/>
+				<image x="90" y="135" scale="45" reservation_id="Standard-27"/>
+				<image x="135" y="135" scale="45" reservation_id="Standard-28"/>
+				<image x="180" y="135" scale="45" reservation_id="Standard-29"/>
+				<image x="225" y="135" scale="45" reservation_id="Standard-30"/>
+				<image x="270" y="135" scale="45" reservation_id="Standard-31"/>
+				<image x="315" y="135" scale="45" reservation_id="Standard-32"/>
+				<image x="0" y="180" scale="45" reservation_id="Standard-33"/>
+				<image x="45" y="180" scale="45" reservation_id="Standard-34"/>
+				<image x="90" y="180" scale="45" reservation_id="Standard-35"/>
+				<image x="135" y="180" scale="45" reservation_id="Standard-36"/>
+				<image x="180" y="180" scale="45" reservation_id="Standard-37"/>
+				<image x="225" y="180" scale="45" reservation_id="Standard-38"/>
+				<image x="270" y="180" scale="45" reservation_id="Standard-39"/>
+				<image x="315" y="180" scale="45" reservation_id="Standard-40"/>
+				<image x="0" y="225" scale="45" reservation_id="Standard-41"/>
+				<image x="45" y="225" scale="45" reservation_id="Standard-42"/>
+				<image x="90" y="225" scale="45" reservation_id="Standard-43"/>
+				<image x="135" y="225" scale="45" reservation_id="Standard-44"/>
+				<image x="180" y="225" scale="45" reservation_id="Standard-45"/>
+				<image x="225" y="225" scale="45" reservation_id="Standard-46"/>
+				<image x="270" y="225" scale="45" reservation_id="Standard-47"/>
+				<image x="315" y="225" scale="45" reservation_id="Standard-48"/>
+				<image x="0" y="270" scale="45" reservation_id="Standard-49"/>
+				<image x="45" y="270" scale="45" reservation_id="Standard-50"/>
+				<image x="90" y="270" scale="45" reservation_id="Standard-51"/>
+				<image x="135" y="270" scale="45" reservation_id="Standard-52"/>
+				<image x="180" y="270" scale="45" reservation_id="Standard-53"/>
+				<image x="225" y="270" scale="45" reservation_id="Standard-54"/>
+				<image x="270" y="270" scale="45" reservation_id="Standard-55"/>
+				<image x="315" y="270" scale="45" reservation_id="Standard-56"/>
+				<image x="0" y="315" scale="45" reservation_id="Standard-57"/>
+				<image x="45" y="315" scale="45" reservation_id="Standard-58"/>
+				<image x="90" y="315" scale="45" reservation_id="Standard-59"/>
+				<image x="135" y="315" scale="45" reservation_id="Standard-60"/>
+				<image x="180" y="315" scale="45" reservation_id="Standard-61"/>
+				<image x="225" y="315" scale="45" reservation_id="Standard-62"/>
+				<image x="270" y="315" scale="45" reservation_id="Standard-63"/>
+				<image x="315" y="315" scale="45" reservation_id="Standard-64"/>
       </layout>
       <layout name="1up_top_left+5" auto-3d-position="true">
 				<image x="0" y="0" scale="240" floor="true" reservation_id="Reserved-1"/>
