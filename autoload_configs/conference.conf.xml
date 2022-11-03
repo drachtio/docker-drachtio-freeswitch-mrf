@@ -149,7 +149,28 @@
       <param name="video-layout-name" value="grid"/>
       <param name="video-canvas-size" value="1280x720"/>
       <param name="video-fps" value="30"/>
-      <param name="video-codec-bandwidth" value="6mb"/>      
+      <param name="video-codec-bandwidth" value="6mb"/>
+      <param name="video-kps-debounce" value="5000"/>
+      <param name="video-quality" value="2"/>
+      <param name="endconf-grace-time" value="1" />
+      <param name="conference-flags" value="video-mute-exit-canvas" />
+      <param name="video-canvas-bgcolor" value="#000000"/>
+      <param name="video-layout-bgcolor" value="#000000"/>
+      <param name="video-letterbox-bgcolor" value="#000000"/>
+      <param name="video-super-canvas-bgcolor" value="#000000"/>
+    </profile>
+    <profile name="mux1080">
+      <param name="rate" value="48000"/>
+      <param name="channels" value="2"/>
+      <param name="interval" value="20"/>
+      <param name="energy-level" value="100"/>
+      <param name="video-mode" value="mux" />
+      <param name="video-layout-name" value="grid"/>
+      <param name="video-canvas-size" value="1920x1080"/>
+      <param name="video-fps" value="30"/>
+      <param name="video-codec-bandwidth" value="6mb"/>
+      <param name="video-kps-debounce" value="5000"/>
+      <param name="video-quality" value="2"/>
       <param name="endconf-grace-time" value="1" />
       <param name="conference-flags" value="video-mute-exit-canvas" />
       <param name="video-canvas-bgcolor" value="#000000"/>
