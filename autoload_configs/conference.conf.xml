@@ -151,7 +151,7 @@
       <param name="video-fps" value="30"/>
       <param name="video-codec-bandwidth" value="6mb"/>
       <param name="video-kps-debounce" value="5000"/>
-      <param name="video-quality" value="2"/>
+      <param name="video-quality" value="1"/>
       <param name="endconf-grace-time" value="1" />
       <param name="conference-flags" value="video-mute-exit-canvas" />
       <param name="video-canvas-bgcolor" value="#000000"/>
