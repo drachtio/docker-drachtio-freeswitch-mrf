@@ -95,6 +95,14 @@ while :; do
     shift
     ;;
 
+  --username)
+    if [ -n "$2" ]; then
+      sed -i -e "s/name=\"username\" value=\"Jambonz\"/name=\"username\" value=\"$2\"/g" /usr/local/freeswitch/conf/sip_profiles/mrf.xml
+    fi
+    shift
+    shift
+    ;;
+
   --advertise-external-ip)
     sed -i -e "s/ext-sip-ip\" value=\".*\"/ext-sip-ip\" value=\"\$\${ext_sip_ip}\""/g /usr/local/freeswitch/conf/sip_profiles/mrf.xml
     sed -i -e "s/ext-rtp-ip\" value=\".*\"/ext-rtp-ip\" value=\"\$\${ext_rtp_ip}\""/g /usr/local/freeswitch/conf/sip_profiles/mrf.xml
