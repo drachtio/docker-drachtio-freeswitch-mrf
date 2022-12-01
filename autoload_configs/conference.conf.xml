@@ -144,7 +144,7 @@
       <param name="rate" value="48000"/>
       <param name="channels" value="2"/>
       <param name="interval" value="20"/>
-      <param name="energy-level" value="100"/>
+      <param name="energy-level" value="0"/>
       <param name="video-mode" value="mux" />
       <param name="video-layout-name" value="grid"/>
       <param name="video-canvas-size" value="1280x720"/>
