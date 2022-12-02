@@ -2,7 +2,7 @@
   <layout-settings>
     <layouts>		
       <layout name="1x1">
-				<image x="0" y="0" scale="360" reservation_id="Standard-1" floor="true"/>
+				<image x="0" y="0" scale="360" reservation_id="Standard-1" />
       </layout>
       <layout name="1x2" auto-3d-position="true">
 				<image x="90" y="0" scale="180" reservation_id="Standard-1"/>
