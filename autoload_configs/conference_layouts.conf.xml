@@ -1,6 +1,9 @@
 <configuration name="conference_layouts.conf" description="Audio Conference">
   <layout-settings>
-    <layouts>		
+    <layouts>
+    	<layout name="1x1-floor">
+				<image x="0" y="0" scale="360" reservation_id="Standard-1" floor="true"/>
+      </layout>
       <layout name="1x1">
 				<image x="0" y="0" scale="360" reservation_id="Standard-1" />
       </layout>
