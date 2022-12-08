@@ -144,12 +144,12 @@
       <param name="rate" value="48000"/>
       <param name="channels" value="2"/>
       <param name="interval" value="20"/>
-      <param name="energy-level" value="0"/>
+      <param name="energy-level" value="100"/>
       <param name="video-mode" value="mux" />
-      <param name="video-layout-name" value="grid"/>
+      <param name="video-layout-name" value="group:grid"/>
       <param name="video-canvas-size" value="1280x720"/>
       <param name="video-fps" value="30"/>
-      <param name="video-codec-bandwidth" value="6mb"/>
+      <param name="video-codec-bandwidth" value="auto"/>
       <param name="video-kps-debounce" value="5000"/>
       <param name="video-quality" value="1"/>
       <param name="endconf-grace-time" value="1" />
@@ -165,10 +165,10 @@
       <param name="interval" value="20"/>
       <param name="energy-level" value="100"/>
       <param name="video-mode" value="mux" />
-      <param name="video-layout-name" value="grid"/>
+      <param name="video-layout-name" value="group:grid"/>
       <param name="video-canvas-size" value="1920x1080"/>
       <param name="video-fps" value="30"/>
-      <param name="video-codec-bandwidth" value="6mb"/>
+      <param name="video-codec-bandwidth" value="auto"/>
       <param name="video-kps-debounce" value="5000"/>
       <param name="video-quality" value="2"/>
       <param name="endconf-grace-time" value="1" />
