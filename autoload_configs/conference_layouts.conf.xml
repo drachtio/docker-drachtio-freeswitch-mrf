@@ -19,6 +19,11 @@
 				<image x="0" y="0" zoom="50" hscale="360" scale="180" reservation_id="Standard-1"/>
 				<image x="180" y="0" zoom="50" hscale="360" scale="180" reservation_id="Standard-2"/>
       </layout>
+      <layout name="3x1-wide" auto-3d-position="true">
+				<image x="0" y="0" zoom="33" hscale="360" scale="120" reservation_id="Standard-1"/>
+				<image x="120" y="0" zoom="33" hscale="360" scale="120" reservation_id="Standard-2"/>
+				<image x="240" y="0" zoom="33" hscale="360" scale="120" reservation_id="Standard-3"/>
+      </layout>
       <layout name="2x1-1x1" auto-3d-position="true">
 				<image x="0" y="0" scale="180" reservation_id="Standard-1"/>
 				<image x="180" y="0" scale="180" reservation_id="Standard-2"/>
