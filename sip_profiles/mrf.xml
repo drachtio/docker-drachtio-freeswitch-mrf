@@ -29,6 +29,8 @@
       <param name="inbound-reg-force-matching-username" value="false"/>
       <param name="nonce-ttl" value="86400"/>
       <param name="manage-presence" value="false"/>
+      <param name="media_timeout" value="60000"/>
+      <param name="media_hold_timeout" value="1800"/>
 
       <param name="enable-3pcc" value="true"/>
 
