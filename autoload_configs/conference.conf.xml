@@ -72,6 +72,7 @@
       <param name="video-quality" value="2"/>
       <param name="endconf-grace-time" value="1" />
       <param name="conference-flags" value="" />
+      <param name="video-border-color" value="#FF005C"/>
       <param name="video-canvas-bgcolor" value="#000000"/>
       <param name="video-layout-bgcolor" value="#000000"/>
       <param name="video-letterbox-bgcolor" value="#000000"/>
