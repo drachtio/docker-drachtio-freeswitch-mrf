@@ -38,8 +38,8 @@
   -->
   <X-PRE-PROCESS cmd="include" data="vars_diff.xml"/>
   <X-PRE-PROCESS cmd="include" data="vars.xml"/>
-  <X-PRE-PROCESS cmd="set" data="rtp_video_max_bandwidth_in=5mb"/>
-  <X-PRE-PROCESS cmd="set" data="rtp_video_max_bandwidth_out=5mb"/>
+  <X-PRE-PROCESS cmd="set" data="rtp_video_max_bandwidth_in=2mb"/>
+  <X-PRE-PROCESS cmd="set" data="rtp_video_max_bandwidth_out=2mb"/>
   <X-PRE-PROCESS cmd="set" data="global_codec_prefs=OPUS,G722,PCMU,PCMA,VP8,H264"/>
   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=OPUS,G722,PCMU,PCMA,VP8,H264"/>
 
