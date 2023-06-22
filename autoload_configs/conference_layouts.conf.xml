@@ -23,7 +23,7 @@
       <layout name="3x1-wide" auto-3d-position="true">
         <image x="5" y="5" zoom="33" hscale="350" scale="110" reservation_id="Standard-1"/>
         <image x="122.5" y="5" zoom="33" hscale="350" scale="110" reservation_id="Standard-2"/>
-        <image x="242.5" y="2.5" zoom="33" hscale="350" scale="110" reservation_id="Standard-3"/>
+        <image x="242.5" y="5" zoom="33" hscale="350" scale="110" reservation_id="Standard-3"/>
       </layout>
       <layout name="2x1-1x1" auto-3d-position="true">
         <image x="5" y="5" scale="170" reservation_id="Standard-1"/>
