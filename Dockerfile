@@ -10,7 +10,7 @@ RUN mkdir -p "$MNT_POINT"
 RUN mkdir -p "$COPY_POINT"
 
 ADD monitorPres3fs.sh /
-RUN chown 775 /monitorPres3fs.sh
+RUN chmod 775 /monitorPres3fs.sh
 #RUN /monitorPres3fs.sh
 
 COPY ./entrypoint.sh /
