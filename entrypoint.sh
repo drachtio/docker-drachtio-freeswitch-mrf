@@ -4,8 +4,8 @@ set -e
 echo "$AWS_KEY:$AWS_SECRET_KEY" > passwd && chmod 600 passwd
 s3fs "$S3_BUCKET" "$MNT_POINT" -o passwd_file=passwd -o endpoint=us-east-2 -o url="https://s3-us-east-2.amazonaws.com"
 
-#run incron
-#/etc/init.d/incron start
+#run pres3fs monitor
+/monitorPres3fs.sh &
 
 #run rsyslog
 service rsyslog start
