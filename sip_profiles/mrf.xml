@@ -15,13 +15,13 @@
       <param name="rtp-ip" value="$${local_ip_v4}"/>
       <param name="sip-ip" value="$${local_ip_v4}"/>
       <param name="sip-port" value="$${sip_port}"/>
-      <param name="ext-rtp-ip" value="$${ext_rtp_ip}"/>
-      <param name="ext-sip-ip" value="$${ext_sip_ip}"/>
+      <param name="ext-rtp-ip" value="$${local_ip_v4}"/>
+      <param name="ext-sip-ip" value="$${local_ip_v4}"/>
       <param name="auth-calls" value="false"/>
       <param name="enable-timer" value="false"/>
-      <param name="user-agent-string" value="drachtio mrf"/>
+      <param name="user-agent-string" value="Jambonz media server"/>
+      <param name="username" value="Jambonz"/>
       <param name="apply-nat-acl" value="nat.auto"/>
-      <param name="local-network-acl" value="nat.auto"/>
       <param name="context" value="mrf"/>
       <param name="rtp-timer-name" value="soft"/>
       <param name="codec-prefs" value="$${global_codec_prefs}"/>
