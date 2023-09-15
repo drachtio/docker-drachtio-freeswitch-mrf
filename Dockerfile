@@ -6,7 +6,7 @@ ENV S3_BUCKET vidamedia
 ENV NODE_VERSION=18
 ENV NVM_DIR=/root/.nvm
 
-# Install necessary packages, Node.js, and verify installations
+# Install necessary packages, Node.js, axios, and verify installations
 RUN apt-get update && apt-get install -y --quiet s3fs awscli rsyslog inotify-tools curl && \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && \
     export NVM_DIR="$HOME/.nvm" && \
@@ -16,7 +16,8 @@ RUN apt-get update && apt-get install -y --quiet s3fs awscli rsyslog inotify-too
     nvm use v${NODE_VERSION} && \
     nvm alias default v${NODE_VERSION} && \
     node --version && \
-    npm --version
+    npm --version && \
+    npm install axios@^1.5.0 -g
 
 # Directory setup
 RUN mkdir -p "$MNT_POINT" && \
