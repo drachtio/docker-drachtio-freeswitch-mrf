@@ -5,6 +5,7 @@ ENV COPY_POINT /var/pres3fs
 ENV S3_BUCKET vidamedia
 ENV NODE_VERSION=18
 ENV NVM_DIR=/root/.nvm
+ENV NODE_PATH /root/.nvm/versions/node/v${NODE_VERSION}/lib/node_modules
 
 # Install necessary packages, Node.js, axios, and verify installations
 RUN apt-get update && apt-get install -y --quiet s3fs awscli rsyslog inotify-tools curl && \
