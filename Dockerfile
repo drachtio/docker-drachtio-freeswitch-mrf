@@ -3,26 +3,28 @@ FROM lylepratt/drachtio-freeswitch-base:latest
 ENV MNT_POINT /var/s3fs
 ENV COPY_POINT /var/pres3fs
 ENV S3_BUCKET vidamedia
-
-RUN apt-get update && apt-get install -y --quiet s3fs awscli rsyslog inotify-tools
-
 ENV NODE_VERSION=18
-RUN apt install -y curl
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-RUN node --version
-RUN npm --version
 
-RUN mkdir -p "$MNT_POINT"
-RUN mkdir -p "$COPY_POINT"
+# Install necessary packages and Node.js
+RUN apt-get update && apt-get install -y --quiet s3fs awscli rsyslog inotify-tools curl && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && \
+    . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION} && \
+    . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION} && \
+    . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
 
+# Verify Node and npm installations
+RUN node --version && \
+    npm --version
+
+# Directory setup
+RUN mkdir -p "$MNT_POINT" && \
+    mkdir -p "$COPY_POINT"
+
+# Copy scripts and configs
 ADD monitorPres3fs.sh /
 RUN chmod 775 /monitorPres3fs.sh
-#RUN /monitorPres3fs.sh
 
 COPY ./entrypoint.sh /
 COPY ./vars_diff.xml  /usr/local/freeswitch/conf/vars_diff.xml
