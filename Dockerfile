@@ -5,17 +5,17 @@ ENV COPY_POINT /var/pres3fs
 ENV S3_BUCKET vidamedia
 ENV NODE_VERSION=18
 ENV NVM_DIR=/root/.nvm
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
-# Install necessary packages and Node.js
+# Install necessary packages, Node.js, and verify installations
 RUN apt-get update && apt-get install -y --quiet s3fs awscli rsyslog inotify-tools curl && \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && \
-    . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION} && \
-    . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION} && \
-    . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-
-# Verify Node and npm installations
-RUN node --version && \
+    export NVM_DIR="$HOME/.nvm" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" && \
+    nvm install ${NODE_VERSION} && \
+    nvm use v${NODE_VERSION} && \
+    nvm alias default v${NODE_VERSION} && \
+    node --version && \
     npm --version
 
 # Directory setup
