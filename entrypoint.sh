@@ -109,6 +109,14 @@ while :; do
     shift
     ;;
 
+  -l|--log-level)
+    if [ -n "$2" ]; then
+      sed -i -e "s/name=\"loglevel\" value=\".*\"/name=\"loglevel\" value=\"$2\"/g" /usr/local/freeswitch/conf/autoload_configs/switch.conf.xml
+    fi
+    shift
+    shift
+    ;;
+
   --)
     shift
     break
