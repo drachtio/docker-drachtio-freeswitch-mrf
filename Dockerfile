@@ -190,7 +190,6 @@ RUN cd /usr/local/src/freeswitch \
     && make -j ${BUILD_CPUS} \
     && make install
 RUN cd /usr/local/src/freeswitch \
-    && make cd-sounds-install cd-moh-install \
     && cp /tmp/acl.conf.xml /usr/local/freeswitch/conf/autoload_configs \
     && cp /tmp/event_socket.conf.xml /usr/local/freeswitch/conf/autoload_configs \
     && cp /tmp/switch.conf.xml /usr/local/freeswitch/conf/autoload_configs \
