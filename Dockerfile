@@ -41,39 +41,40 @@ WORKDIR /usr/local/src
 RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
     && LANGUAGE=cpp make -j ${BUILD_CPUS}
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN echo "LD_LIBRARY_PATH set in grpc stage: $LD_LIBRARY_PATH"
 RUN ldd $(which protoc) || true 
 
 FROM grpc AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
-RUN echo "LD_LIBRARY_PATH inherited in nuance-asr-grpc-api stage: $LD_LIBRARY_PATH"
-RUN ls -l /usr/local/lib # Verifying that the libraries are present
-RUN ldd $(which protoc) || true  
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch main https://github.com/drachtio/nuance-asr-grpc-api.git \
     && cd nuance-asr-grpc-api \
     && LANGUAGE=cpp make
 
 FROM grpc AS riva-asr-grpc-api
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch main https://github.com/drachtio/riva-asr-grpc-api.git \
     && cd riva-asr-grpc-api \
     && LANGUAGE=cpp make
 
 FROM grpc AS soniox-asr-grpc-api
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grpc-api.git \
     && cd soniox-asr-grpc-api \
     && LANGUAGE=cpp make
 
 FROM grpc AS cobalt-asr-grpc-api
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
     && cd cobalt-asr-grpc-api \
     && LANGUAGE=cpp make
         
 FROM base-cmake AS websockets
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch v4.3.3 https://github.com/warmcat/libwebsockets.git \
     && cd /usr/local/src/libwebsockets \
     && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && make && make install
@@ -81,6 +82,7 @@ RUN git clone --depth 1 --branch v4.3.3 https://github.com/warmcat/libwebsockets
 FROM base AS speechsdk
 COPY ./files/SpeechSDK-Linux-1.37.0.tar.gz /tmp/
 WORKDIR /tmp
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN tar xvfz SpeechSDK-Linux-1.37.0.tar.gz \
     && cd SpeechSDK-Linux-1.37.0 \
     && cp -r include /usr/local/include/MicrosoftSpeechSDK \
@@ -94,23 +96,27 @@ RUN git clone --depth 1 https://github.com/jambonz/freeswitch-modules.git -b 1.2
 
 FROM base AS spandsp
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone https://github.com/freeswitch/spandsp.git && cd spandsp && git checkout 0d2e6ac \
     && ./bootstrap.sh && ./configure && make -j ${BUILD_CPUS} && make install
 
 FROM base AS sofia-sip
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch master https://github.com/freeswitch/sofia-sip.git \
     && cd sofia-sip \
     && ./bootstrap.sh && ./configure && make -j ${BUILD_CPUS} && make install
 
 FROM base AS libfvad
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 https://github.com/dpirch/libfvad.git \
     && cd libfvad \
     && autoreconf -i && ./configure && make -j ${BUILD_CPUS} && make install
 
 FROM base-cmake AS aws-sdk-cpp
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch 1.11.283 https://github.com/aws/aws-sdk-cpp.git \
     && cd aws-sdk-cpp \
     && git submodule update --init --recursive
@@ -123,6 +129,7 @@ RUN cd /usr/local/src/aws-sdk-cpp \
 
 FROM base-cmake AS aws-c-common
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && cd aws-c-common \
     && mkdir -p build && cd build \
@@ -130,6 +137,7 @@ RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && make -j ${BUILD_CPUS} && make install
 
 FROM base AS freeswitch
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 COPY ./files/* /tmp/
 COPY --from=aws-c-common /usr/local/include/ /usr/local/include/
 COPY --from=aws-c-common /usr/local/lib/ /usr/local/lib/
