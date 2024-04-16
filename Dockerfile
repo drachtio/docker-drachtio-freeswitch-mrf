@@ -34,15 +34,13 @@ RUN cd grpc \
     && cmake -DBUILD_SHARED_LIBS=ON -DgRPC_SSL_PROVIDER=package -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo ../.. \
     && make -j ${BUILD_CPUS} \
     && make install
-RUN ls -l /usr/local/lib
+RUN ldconfig /usr/local/lib
 
 FROM grpc AS grpc-googleapis
 WORKDIR /usr/local/src
 RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
     && LANGUAGE=cpp make -j ${BUILD_CPUS}
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN echo "LD_LIBRARY_PATH set in grpc stage: $LD_LIBRARY_PATH"
-RUN ldd $(which protoc) || true 
 
 FROM grpc-googleapis AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
@@ -137,7 +135,6 @@ RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && make -j ${BUILD_CPUS} && make install
 
 FROM base AS freeswitch
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 COPY ./files/* /tmp/
 COPY --from=aws-c-common /usr/local/include/ /usr/local/include/
 COPY --from=aws-c-common /usr/local/lib/ /usr/local/lib/
@@ -158,6 +155,7 @@ COPY --from=speechsdk /usr/local/lib/ /usr/local/lib/
 COPY --from=websockets /usr/local/include/ /usr/local/include/
 COPY --from=websockets /usr/local/lib/ /usr/local/lib/
 WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch v1.10.10 https://github.com/signalwire/freeswitch.git
 COPY --from=freeswitch-modules /usr/local/src/freeswitch-modules/ /usr/local/src/freeswitch/src/mod/applications/
 COPY --from=nuance-asr-grpc-api /usr/local/src/nuance-asr-grpc-api /usr/local/src/freeswitch/libs/nuance-asr-grpc-api
