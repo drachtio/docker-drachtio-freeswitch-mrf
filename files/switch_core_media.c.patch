@@ -1,0 +1,11 @@
+--- switch_core_media.c	2023-08-23 17:17:24.081729695 +0000
++++ switch_core_media.c.new	2023-08-23 17:48:32.812205983 +0000
+@@ -2639,7 +2639,7 @@
+ 	*(buf + datalen) = '\0';
+
+ 	while (*buf & 0x80) {
+-		if (buf + 3 > e) {
++		if (buf + 3 > e || count >= MAX_RED_FRAMES) {
+ 			*new_datalen = 0;
+ 			return 0;
+ 		}
