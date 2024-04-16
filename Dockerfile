@@ -111,16 +111,16 @@ RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grp
     && cd soniox-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc AS cobalt-asr-grpc-api
-WORKDIR /usr/local/src
-RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
-    && cd cobalt-asr-grpc-api \
-    && LANGUAGE=cpp make
-    
 FROM grpc AS grpc-googleapis
 WORKDIR /usr/local/src
 RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
     && LANGUAGE=cpp make -j ${BUILD_CPUS}
+
+FROM grpc-googleapis AS cobalt-asr-grpc-api
+WORKDIR /usr/local/src
+RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
+    && cd cobalt-asr-grpc-api \
+        && LANGUAGE=cpp make 
 
 FROM base AS freeswitch
 COPY ./files/* /tmp/
