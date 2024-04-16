@@ -44,28 +44,28 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN echo "LD_LIBRARY_PATH set in grpc stage: $LD_LIBRARY_PATH"
 RUN ldd $(which protoc) || true 
 
-FROM grpc AS nuance-asr-grpc-api
+FROM grpc-googleapis AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch main https://github.com/drachtio/nuance-asr-grpc-api.git \
     && cd nuance-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc AS riva-asr-grpc-api
+FROM grpc-googleapis AS riva-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch main https://github.com/drachtio/riva-asr-grpc-api.git \
     && cd riva-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc AS soniox-asr-grpc-api
+FROM grpc-googleapis AS soniox-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grpc-api.git \
     && cd soniox-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc AS cobalt-asr-grpc-api
+FROM grpc-googleapis AS cobalt-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
