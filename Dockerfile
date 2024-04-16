@@ -35,28 +35,29 @@ RUN cd grpc \
     && make -j ${BUILD_CPUS} \
     && make install
 
-FROM grpc AS nuance-asr-grpc-api
+FROM grpc AS grpc-googleapis
+WORKDIR /usr/local/src
+RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
+    && LANGUAGE=cpp make -j ${BUILD_CPUS}
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+    
+FROM grpc-googleapis AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch main https://github.com/drachtio/nuance-asr-grpc-api.git \
     && cd nuance-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc AS riva-asr-grpc-api
+FROM grpc-googleapis AS riva-asr-grpc-api
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch main https://github.com/drachtio/riva-asr-grpc-api.git \
     && cd riva-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc AS soniox-asr-grpc-api
+FROM grpc-googleapis AS soniox-asr-grpc-api
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grpc-api.git \
     && cd soniox-asr-grpc-api \
     && LANGUAGE=cpp make
-
-FROM grpc AS grpc-googleapis
-WORKDIR /usr/local/src
-RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
-    && LANGUAGE=cpp make -j ${BUILD_CPUS}
 
 FROM grpc-googleapis AS cobalt-asr-grpc-api
 WORKDIR /usr/local/src
