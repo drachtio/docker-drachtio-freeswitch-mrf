@@ -207,5 +207,17 @@ COPY --from=freeswitch /usr/local/lib/ /usr/local/lib/
 RUN apt update && apt install -y --quiet --no-install-recommends libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff5 libopus0 libsndfile1 libshout3 \
     && ldconfig && rm -rf /var/lib/apt/lists/*
 
+ENV PATH="/usr/local/freeswitch/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
+
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["freeswitch"]
+
+# Volumes for persistent data
+VOLUME ["/usr/local/freeswitch/log", "/usr/local/freeswitch/recordings", "/usr/local/freeswitch/sounds"]
+
 ONBUILD ADD dialplan /usr/local/freeswitch/conf/dialplan
 ONBUILD ADD sip_profiles /usr/local/freeswitch/conf/sip_profiles
