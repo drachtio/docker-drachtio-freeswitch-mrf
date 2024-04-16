@@ -54,27 +54,7 @@ RUN tar xvfz SpeechSDK-Linux-1.37.0.tar.gz \
 
 FROM base AS freeswitch-modules
 WORKDIR /usr/local/src
-RUN git clone --depth 1 https://github.com/jambonz/freeswitch-modules.git -b 1.2.5 \
-  && cp -r /usr/local/src/freeswitch-modules/mod_audio_fork /usr/local/src/freeswitch/src/mod/applications/mod_audio_fork \
-  && cp -r /usr/local/src/freeswitch-modules/mod_aws_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_aws_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_assemblyai_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_assemblyai_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_azure_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_azure_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_azure_tts /usr/local/src/freeswitch/src/mod/applications/mod_azure_tts \
-  && cp -r /usr/local/src/freeswitch-modules/mod_aws_lex /usr/local/src/freeswitch/src/mod/applications/mod_aws_lex \
-  && cp -r /usr/local/src/freeswitch-modules/mod_cobalt_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_cobalt_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_deepgram_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_deepgram_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_deepgram_tts /usr/local/src/freeswitch/src/mod/applications/mod_deepgram_tts \
-  && cp -r /usr/local/src/freeswitch-modules/mod_playht_tts /usr/local/src/freeswitch/src/mod/applications/mod_playht_tts \
-  && cp -r /usr/local/src/freeswitch-modules/mod_dub /usr/local/src/freeswitch/src/mod/applications/mod_dub \
-  && cp -r /usr/local/src/freeswitch-modules/mod_google_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_google_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_ibm_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_ibm_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_nuance_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nuance_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_nvidia_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_nvidia_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_soniox_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_soniox_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_jambonz_transcribe /usr/local/src/freeswitch/src/mod/applications/mod_jambonz_transcribe \
-  && cp -r /usr/local/src/freeswitch-modules/mod_dialogflow /usr/local/src/freeswitch/src/mod/applications/mod_dialogflow \
-  && cp -r /usr/local/src/freeswitch-modules/mod_elevenlabs_tts /usr/local/src/freeswitch/src/mod/applications/mod_elevenlabs_tts \
-  && cp -r /usr/local/src/freeswitch-modules/mod_whisper_tts /usr/local/src/freeswitch/src/mod/applications/mod_whisper_tts
+RUN git clone --depth 1 https://github.com/jambonz/freeswitch-modules.git -b 1.2.5 
 
 FROM base AS spandsp
 WORKDIR /usr/local/src
@@ -164,7 +144,7 @@ COPY --from=websockets /usr/local/include/ /usr/local/include/
 COPY --from=websockets /usr/local/lib/ /usr/local/lib/
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch v1.10.10 https://github.com/signalwire/freeswitch.git
-COPY --from=freeswitch-modules /usr/local/src/freeswitch/src/mod/applications/ /usr/local/src/freeswitch/src/mod/applications/
+COPY --from=freeswitch-modules /usr/local/src/freeswitch/src/freeswitch-modules/ /usr/local/src/freeswitch/src/mod/applications/
 COPY --from=nuance-asr-grpc-api /usr/local/src/nuance-asr-grpc-api /usr/local/src/freeswitch/libs/nuance-asr-grpc-api
 COPY --from=riva-asr-grpc-api /usr/local/src/riva-asr-grpc-api /usr/local/src/freeswitch/libs/riva-asr-grpc-api
 COPY --from=soniox-asr-grpc-api /usr/local/src/soniox-asr-grpc-api /usr/local/src/freeswitch/libs/soniox-asr-grpc-api
