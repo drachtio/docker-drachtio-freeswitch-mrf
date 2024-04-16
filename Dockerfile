@@ -120,8 +120,8 @@ FROM grpc-googleapis AS cobalt-asr-grpc-api
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
     && cd cobalt-asr-grpc-api \
-        && LANGUAGE=cpp make 
-
+    && LANGUAGE=cpp make
+    
 FROM base AS freeswitch
 COPY ./files/* /tmp/
 COPY --from=aws-c-common /usr/local/include/ /usr/local/include/
