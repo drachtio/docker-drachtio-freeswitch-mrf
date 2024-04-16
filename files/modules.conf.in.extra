@@ -16,6 +16,7 @@ applications/mod_jambonz_transcribe
 applications/mod_nuance_transcribe
 applications/mod_nvidia_transcribe
 applications/mod_playht_tts
+applications/mod_rimelabs_tts
 applications/mod_soniox_transcribe
 applications/mod_dialogflow
 #applications/mod_abstraction

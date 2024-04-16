@@ -2171,6 +2171,7 @@ AC_CONFIG_FILES([Makefile
     src/mod/applications/mod_nuance_transcribe/Makefile
     src/mod/applications/mod_nvidia_transcribe/Makefile
     src/mod/applications/mod_playht_tts/Makefile
+    src/mod/applications/mod_rimelabs_tts/Makefile
     src/mod/applications/mod_soniox_transcribe/Makefile
     src/mod/applications/mod_dialogflow/Makefile
 		src/mod/applications/mod_abstraction/Makefile
