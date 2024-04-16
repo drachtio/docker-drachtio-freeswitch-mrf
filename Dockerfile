@@ -131,7 +131,7 @@ RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grp
     && cd soniox-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc-googleapis AS cobalt-asr-grpc-api
+FROM grpc AS cobalt-asr-grpc-api
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
     && cd cobalt-asr-grpc-api \
