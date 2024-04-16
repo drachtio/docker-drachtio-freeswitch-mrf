@@ -201,10 +201,13 @@ RUN cd /usr/local/src/freeswitch \
 	  && sed -i -e 's/outbound_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/outbound_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml
 
 FROM debian:bullseye-slim AS final
+ARG TARGETARCH
+ENV LIB_DIR=/usr/lib/x86_64-linux-gnu
+RUN if [ "$TARGETARCH" = "arm64" ]; then LIB_DIR=/usr/lib/aarch64-linux-gnu; fi
 COPY --from=freeswitch /usr/local/freeswitch/ /usr/local/freeswitch/
 COPY --from=freeswitch /usr/local/bin/ /usr/local/bin/
 COPY --from=freeswitch /usr/local/lib/ /usr/local/lib/
-COPY --from=freeswitch /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
+COPY --from=freeswitch $LIB_DIR/ /usr/lib/
 RUN apt update && apt install -y --quiet --no-install-recommends libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff5 libopus0 libsndfile1 libshout3 \
     && ldconfig && rm -rf /var/lib/apt/lists/*
 
