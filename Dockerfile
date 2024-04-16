@@ -11,7 +11,6 @@ RUN for i in $(seq 1 8); do mkdir -p "/usr/share/man/man${i}"; done \
     gnupg2 wget pkg-config ca-certificates libjpeg-dev libsqlite3-dev libpcre3-dev libldns-dev libboost-all-dev \
     libspeex-dev libspeexdsp-dev libedit-dev libtiff-dev yasm libswscale-dev haveged libre2-dev \
     libopus-dev libsndfile-dev libshout3-dev libmpg123-dev libmp3lame-dev libopusfile-dev libgoogle-perftools-dev \
-    && rm -rf /var/lib/apt/lists/* \
     && git config --global http.postBuffer 524288000  \
   	&& git config --global https.postBuffer 524288000 \
 	  && git config --global pull.rebase true
@@ -36,6 +35,35 @@ RUN cd grpc \
     && make -j ${BUILD_CPUS} \
     && make install
 
+FROM grpc AS nuance-asr-grpc-api
+WORKDIR /usr/local/src
+RUN git clone --depth 1 --branch main https://github.com/drachtio/nuance-asr-grpc-api.git \
+    && cd nuance-asr-grpc-api \
+    && LANGUAGE=cpp make
+
+FROM grpc AS riva-asr-grpc-api
+WORKDIR /usr/local/src
+RUN git clone --depth 1 --branch main https://github.com/drachtio/riva-asr-grpc-api.git \
+    && cd riva-asr-grpc-api \
+    && LANGUAGE=cpp make
+
+FROM grpc AS soniox-asr-grpc-api
+WORKDIR /usr/local/src
+RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grpc-api.git \
+    && cd soniox-asr-grpc-api \
+    && LANGUAGE=cpp make
+
+FROM grpc AS grpc-googleapis
+WORKDIR /usr/local/src
+RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
+    && LANGUAGE=cpp make -j ${BUILD_CPUS}
+
+FROM grpc-googleapis AS cobalt-asr-grpc-api
+WORKDIR /usr/local/src
+RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
+    && cd cobalt-asr-grpc-api \
+    && LANGUAGE=cpp make
+        
 FROM base-cmake AS websockets
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch v4.3.3 https://github.com/warmcat/libwebsockets.git \
@@ -93,35 +121,6 @@ RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=OFF -DCMAKE_CXX_FLAGS="-Wno-unused-parameter" \
     && make -j ${BUILD_CPUS} && make install
 
-FROM grpc AS nuance-asr-grpc-api
-WORKDIR /usr/local/src
-RUN git clone --depth 1 --branch main https://github.com/drachtio/nuance-asr-grpc-api.git \
-    && cd nuance-asr-grpc-api \
-    && LANGUAGE=cpp make
-
-FROM grpc AS riva-asr-grpc-api
-WORKDIR /usr/local/src
-RUN git clone --depth 1 --branch main https://github.com/drachtio/riva-asr-grpc-api.git \
-    && cd riva-asr-grpc-api \
-    && LANGUAGE=cpp make
-
-FROM grpc AS soniox-asr-grpc-api
-WORKDIR /usr/local/src
-RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grpc-api.git \
-    && cd soniox-asr-grpc-api \
-    && LANGUAGE=cpp make
-
-FROM grpc AS grpc-googleapis
-WORKDIR /usr/local/src
-RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
-    && LANGUAGE=cpp make -j ${BUILD_CPUS}
-
-FROM grpc-googleapis AS cobalt-asr-grpc-api
-WORKDIR /usr/local/src
-RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
-    && cd cobalt-asr-grpc-api \
-    && LANGUAGE=cpp make
-    
 FROM base AS freeswitch
 COPY ./files/* /tmp/
 COPY --from=aws-c-common /usr/local/include/ /usr/local/include/
