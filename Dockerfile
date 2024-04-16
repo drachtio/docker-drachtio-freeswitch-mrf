@@ -41,11 +41,15 @@ WORKDIR /usr/local/src
 RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
     && LANGUAGE=cpp make -j ${BUILD_CPUS}
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-    
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+RUN echo "LD_LIBRARY_PATH set in grpc stage: $LD_LIBRARY_PATH"
+RUN ldd $(which protoc) || true 
+
 FROM grpc AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
-RUN echo "LD_LIBRARY_PATH = $LD_LIBRARY_PATH"
-RUN ls -l /usr/local/lib
+RUN echo "LD_LIBRARY_PATH inherited in nuance-asr-grpc-api stage: $LD_LIBRARY_PATH"
+RUN ls -l /usr/local/lib # Verifying that the libraries are present
+RUN ldd $(which protoc) || true  
 RUN git clone --depth 1 --branch main https://github.com/drachtio/nuance-asr-grpc-api.git \
     && cd nuance-asr-grpc-api \
     && LANGUAGE=cpp make
