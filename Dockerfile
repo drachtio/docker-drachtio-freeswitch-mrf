@@ -34,6 +34,7 @@ RUN cd grpc \
     && cmake -DBUILD_SHARED_LIBS=ON -DgRPC_SSL_PROVIDER=package -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo ../.. \
     && make -j ${BUILD_CPUS} \
     && make install
+RUN ls -l /usr/local/lib
 
 FROM grpc AS grpc-googleapis
 WORKDIR /usr/local/src
@@ -41,25 +42,27 @@ RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git c
     && LANGUAGE=cpp make -j ${BUILD_CPUS}
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
     
-FROM grpc-googleapis AS nuance-asr-grpc-api
+FROM grpc AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
+RUN echo "LD_LIBRARY_PATH = $LD_LIBRARY_PATH"
+RUN ls -l /usr/local/lib
 RUN git clone --depth 1 --branch main https://github.com/drachtio/nuance-asr-grpc-api.git \
     && cd nuance-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc-googleapis AS riva-asr-grpc-api
+FROM grpc AS riva-asr-grpc-api
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch main https://github.com/drachtio/riva-asr-grpc-api.git \
     && cd riva-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc-googleapis AS soniox-asr-grpc-api
+FROM grpc AS soniox-asr-grpc-api
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grpc-api.git \
     && cd soniox-asr-grpc-api \
     && LANGUAGE=cpp make
 
-FROM grpc-googleapis AS cobalt-asr-grpc-api
+FROM grpc AS cobalt-asr-grpc-api
 WORKDIR /usr/local/src
 RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
     && cd cobalt-asr-grpc-api \
