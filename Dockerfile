@@ -135,7 +135,7 @@ RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && make -j ${BUILD_CPUS} && make install
 
 FROM base AS freeswitch
-COPY ./files/* /tmp/
+COPY ./files/ /tmp/
 COPY --from=aws-c-common /usr/local/include/ /usr/local/include/
 COPY --from=aws-c-common /usr/local/lib/ /usr/local/lib/
 COPY --from=aws-sdk-cpp /usr/local/include/ /usr/local/include/
