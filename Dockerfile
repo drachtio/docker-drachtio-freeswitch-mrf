@@ -214,7 +214,10 @@ RUN apt update && apt install -y --quiet --no-install-recommends libsqlite3-0 li
 ENV PATH="/usr/local/freeswitch/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH}"
 
+COPY ./dialplan /usr/local/freeswitch/conf/dialplan
+COPY ./sip_profiles /usr/local/freeswitch/conf/sip_profiles
 COPY ./entrypoint.sh /entrypoint.sh
+
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
@@ -222,6 +225,3 @@ CMD ["freeswitch"]
 
 # Volumes for persistent data
 VOLUME ["/usr/local/freeswitch/log", "/usr/local/freeswitch/recordings", "/usr/local/freeswitch/sounds"]
-
-ONBUILD ADD dialplan /usr/local/freeswitch/conf/dialplan
-ONBUILD ADD sip_profiles /usr/local/freeswitch/conf/sip_profiles
