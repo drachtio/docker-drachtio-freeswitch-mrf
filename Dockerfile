@@ -154,8 +154,6 @@ COPY --from=speechsdk /usr/local/include/ /usr/local/include/
 COPY --from=speechsdk /usr/local/lib/ /usr/local/lib/
 COPY --from=websockets /usr/local/include/ /usr/local/include/
 COPY --from=websockets /usr/local/lib/ /usr/local/lib/
-COPY sip_profiles/ /usr/local/freeswitch/conf/sip_profiles/
-COPY dialplan/ /usr/local/freeswitch/conf/dialplan/
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch v1.10.10 https://github.com/signalwire/freeswitch.git
@@ -198,6 +196,8 @@ RUN cd /usr/local/src/freeswitch \
     && cp /tmp/conference.conf.xml /usr/local/freeswitch/conf/autoload_configs \
     && rm -Rf /usr/local/freeswitch/conf/dialplan/* \
     && rm -Rf /usr/local/freeswitch/conf/sip_profiles/* \
+    && cp /tmp/dialplan/* /usr/local/freeswitch/conf/dialplan/ \
+    && cp /tmp/sip_profiles/* /usr/local/freeswitch/conf/sip_profiles/ \
     && cp /usr/local/src/freeswitch/conf/vanilla/autoload_configs/modules.conf.xml /usr/local/freeswitch/conf/autoload_configs \
 	  && sed -i -e 's/global_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/global_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml \
 	  && sed -i -e 's/outbound_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/outbound_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml
