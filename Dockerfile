@@ -154,6 +154,8 @@ COPY --from=speechsdk /usr/local/include/ /usr/local/include/
 COPY --from=speechsdk /usr/local/lib/ /usr/local/lib/
 COPY --from=websockets /usr/local/include/ /usr/local/include/
 COPY --from=websockets /usr/local/lib/ /usr/local/lib/
+COPY sip_profiles/ /usr/local/freeswitch/conf/sip_profiles/
+COPY dialplan/ /usr/local/freeswitch/conf/dialplan/
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 --branch v1.10.10 https://github.com/signalwire/freeswitch.git
@@ -214,8 +216,6 @@ RUN apt update && apt install -y --quiet --no-install-recommends libsqlite3-0 li
 ENV PATH="/usr/local/freeswitch/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH}"
 
-COPY ./dialplan /usr/local/freeswitch/conf/dialplan
-COPY ./sip_profiles /usr/local/freeswitch/conf/sip_profiles
 COPY ./entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
