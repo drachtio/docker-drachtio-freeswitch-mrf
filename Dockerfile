@@ -182,6 +182,8 @@ RUN cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac \
     && patch < mod_httapi.c.patch \
     && cd /usr/local/src/freeswitch/src \
     && cp /tmp/switch_event.c . \
+    && cp /tmp/mod_conference.h /usr/local/src/freeswitch/src/mod/applications/mod_conference \
+    && cp /tmp/conference_api.c /usr/local/src/freeswitch/src/mod/applications/mod_conference \
     && sed -i '/#ifndef cJSON_AS4CPP__h/i #ifndef cJSON__h\n#define cJSON__h' /usr/local/include/aws/core/external/cjson/cJSON.h \
     && echo '#endif' >> /usr/local/include/aws/core/external/cjson/cJSON.h \
     && cd /usr/local/src/freeswitch \
