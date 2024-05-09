@@ -220,6 +220,8 @@ ENV PATH="/usr/local/freeswitch/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
 
 COPY ./entrypoint.sh /entrypoint.sh
+COPY ./vars_diff.xml  /usr/local/freeswitch/conf/vars_diff.xml
+COPY ./freeswitch.xml /usr/local/freeswitch/conf/freeswitch.xml
 
 RUN chmod +x /entrypoint.sh
 
