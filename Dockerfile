@@ -17,11 +17,13 @@ RUN for i in $(seq 1 8); do mkdir -p "/usr/share/man/man${i}"; done \
 
 FROM base AS base-cmake
 WORKDIR /usr/local/src
+# TARGETARCH=x86_64 or aarch64
+ARG TARGETARCH=x86_64
 RUN export CMAKE_VERSION=3.28.3 \
-    && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh \
-    && chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh \
-    && ./cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license --prefix=/usr/local \
-    && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.sh \
+    && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-${TARGETARCH}.sh \
+    && chmod +x cmake-${CMAKE_VERSION}-linux-${TARGETARCH}.sh \
+    && ./cmake-${CMAKE_VERSION}-linux-${TARGETARCH}.sh --skip-license --prefix=/usr/local \
+    && rm -f cmake-${CMAKE_VERSION}-linux-${TARGETARCH}.sh \
     && cmake --version
 
 FROM base-cmake AS grpc
@@ -78,6 +80,8 @@ RUN git clone --depth 1 --branch v4.3.3 https://github.com/warmcat/libwebsockets
     && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && make && make install
 
 FROM base AS speechsdk
+# TARGETARCH=x86_64 or aarch64
+ARG TARGETARCH=x86_64
 COPY ./files/SpeechSDK-Linux-1.37.0.tar.gz /tmp/
 WORKDIR /tmp
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
@@ -85,7 +89,11 @@ RUN tar xvfz SpeechSDK-Linux-1.37.0.tar.gz \
     && cd SpeechSDK-Linux-1.37.0 \
     && cp -r include /usr/local/include/MicrosoftSpeechSDK \
     && cp -r lib/ /usr/local/lib/MicrosoftSpeechSDK \
-    && cp /usr/local/lib/MicrosoftSpeechSDK/x64/libMicrosoft.*.so /usr/local/lib/ \
+    && if [ "$TARGETARCH" = "aarch64" ]; then \
+           cp /usr/local/lib/MicrosoftSpeechSDK/arm64/libMicrosoft.*.so /usr/local/lib/; \
+       else \
+           cp /usr/local/lib/MicrosoftSpeechSDK/x86_64/libMicrosoft.*.so /usr/local/lib/; \
+       fi \
     && ls -lrt /usr/local/lib/
 
 FROM base AS freeswitch-modules
@@ -206,13 +214,13 @@ RUN cd /usr/local/src/freeswitch \
 	  && sed -i -e 's/outbound_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/outbound_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml
 
 FROM debian:bullseye-slim AS final
-ARG TARGETARCH
-ENV LIB_DIR=/usr/lib/x86_64-linux-gnu
-RUN if [ "$TARGETARCH" = "arm64" ]; then LIB_DIR=/usr/lib/aarch64-linux-gnu; fi
+# TARGETARCH=x86_64 or aarch64
+ARG TARGETARCH=x86_64
+ENV LIB_DIR=/usr/lib/${TARGETARCH}-linux-gnu
 COPY --from=freeswitch /usr/local/freeswitch/ /usr/local/freeswitch/
 COPY --from=freeswitch /usr/local/bin/ /usr/local/bin/
 COPY --from=freeswitch /usr/local/lib/ /usr/local/lib/
-COPY --from=freeswitch $LIB_DIR/ /usr/lib/
+COPY --from=freeswitch /usr/lib/${TARGETARCH}-linux-gnu/ /usr/lib/
 RUN apt update && apt install -y --quiet --no-install-recommends ca-certificates libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff5 libopus0 libsndfile1 libshout3 \
     && ldconfig && rm -rf /var/lib/apt/lists/*
 
