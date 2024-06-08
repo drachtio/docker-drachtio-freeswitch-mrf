@@ -8,7 +8,7 @@ fi
 
 cmakeVersion=$(grep cmakeVersion .env | awk -F '=' '{print $2}')
 grpcVersion=$(grep grpcVersion .env | awk -F '=' '{print $2}')
-websocketsVersion=$(grep websocketsVersion .env | awk -F '=' '{print $2}')
+libwebsocketsVersion=$(grep libwebsocketsVersion .env | awk -F '=' '{print $2}')
 speechSdkVersion=$(grep speechSdkVersion .env | awk -F '=' '{print $2}')
 spandspVersion=$(grep spandspVersion .env | awk -F '=' '{print $2}')
 sofiaVersion=$(grep sofiaVersion .env | awk -F '=' '{print $2}')
@@ -19,7 +19,7 @@ freeswitchVersion=$(grep freeswitchVersion .env | awk -F '=' '{print $2}')
 docker build \
   --build-arg CMAKE_VERSION="${cmakeVersion}" \
   --build-arg GRPC_VERSION="${grpcVersion}" \
-  --build-arg WEBSOCKETS_VERSION="${websocketsVersion}" \
+  --build-arg LIBWEBSOCKETS_VERSION="${libwebsocketsVersion}" \
   --build-arg SPEECH_SDK_VERSION="${speechSdkVersion}" \
   --build-arg SPANDSP_VERSION="${spandspVersion}" \
   --build-arg SOFIA_VERSION="${sofiaVersion}" \

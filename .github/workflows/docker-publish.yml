@@ -23,8 +23,8 @@ jobs:
       - name: Read the value of the grpc version
         run: echo "##vso[task.setvariable variable=grpcVersion]$(grep grpcVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
         shell: bash
-      - name: Read the value of the websocket version
-        run: echo "##vso[task.setvariable variable=websocketsVersion]$(grep websocketsVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+      - name: Read the value of the libwebsocketsVersion version
+        run: echo "##vso[task.setvariable variable=libwebsocketsVersion]$(grep libwebsocketsVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
         shell: bash
       - name: Read the value of the speech SDK version
         run: echo "##vso[task.setvariable variable=speechSdkVersion]$(grep speechSdkVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"

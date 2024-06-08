@@ -8,6 +8,7 @@
 - improve `Dockerfile` for `sofia-sip` and use tag instead of branch
 - improve `Dockerfile` for `aws-sdk-cpp` and use tag instead of branch
 - improve `Dockerfile` for `freeswitch` and use tag instead of branch
+- improve `Dockerfile` for `libwebsockets` and use tag instead of branch
 - update the `docker-publish` pipeline to read and set the appropriate build args
 - update `README` and add section of how to build the image locally
 - add bash script `build-locally`

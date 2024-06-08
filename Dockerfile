@@ -5,7 +5,7 @@ ARG BUILD_CPUS=1
 ## # this will be populated from the vaule in .env file
 ARG CMAKE_VERSION 
 ARG GRPC_VERSION
-ARG WEBSOCKETS_VERSION
+ARG LIBWEBSOCKETS_VERSION
 ARG SPEECH_SDK_VERSION
 ARG SPANDSP_VERSION
 ARG SOFIA_VERSION
@@ -86,7 +86,7 @@ RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grp
 FROM base-cmake AS websockets
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 --branch v$WEBSOCKETS_VERSION https://github.com/warmcat/libwebsockets.git \
+RUN git clone --depth 1 https://github.com/warmcat/libwebsockets.git -b v$LIBWEBSOCKETS_VERSION \
     && cd /usr/local/src/libwebsockets \
     && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && make && make install
 
