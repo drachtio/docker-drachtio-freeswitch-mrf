@@ -187,3 +187,11 @@ This is the modules.conf.xml file in the image which dictates which modules get 
   </modules>
 </configuration>
 ```
+
+# Build image locally
+
+Docker build command does not natively support reading variable from `.env` file. Use the following command to build the docker image locally
+
+```bash
+sh build-locally.sh
+```

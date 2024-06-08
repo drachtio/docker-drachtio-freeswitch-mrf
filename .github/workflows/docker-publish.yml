@@ -17,6 +17,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Read the value of the cmake version
+        run: echo "##vso[task.setvariable variable=cmakeVersion]$(grep cmakeVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash
+      - name: Read the value of the grpc version
+        run: echo "##vso[task.setvariable variable=grpcVersion]$(grep grpcVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash
+      - name: Read the value of the websocket version
+        run: echo "##vso[task.setvariable variable=websocketsVersion]$(grep websocketsVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash
+      - name: Read the value of the speech SDK version
+        run: echo "##vso[task.setvariable variable=speechSdkVersion]$(grep speechSdkVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash
+      - name: Read the value of the spandsp version
+        run: echo "##vso[task.setvariable variable=spandspVersion]$(grep spandspVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash
+      - name: Read the value of the sofia version
+        run: echo "##vso[task.setvariable variable=sofiaVersion]$(grep sofiaVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash
+      - name: Read the value of the aws SDK CPP version
+        run: echo "##vso[task.setvariable variable=awsSdkCppVersion]$(grep awsSdkCppVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash      
+      - name: Read the value of the freeswitch modules version
+        run: echo "##vso[task.setvariable variable=freeswitchModulesVersion]$(grep freeswitchModulesVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash
+      - name: Read the value of the freeswitch version
+        run: echo "##vso[task.setvariable variable=freeswitchVersion]$(grep freeswitchVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        shell: bash
+
       - name: prepare tag 
         id: prepare_tag
         run: |
