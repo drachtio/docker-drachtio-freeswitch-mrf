@@ -39,7 +39,7 @@ RUN export CMAKE_VERSION=$CMAKE_VERSION \
 
 FROM base-cmake AS grpc
 WORKDIR /usr/local/src
-RUN git clone --depth 1 https://github.com/grpc/grpc -b v$GRPC_VERSION && cd grpc \
+RUN git clone --depth 1 -b v$GRPC_VERSION https://github.com/grpc/grpc && cd grpc \
     && git submodule update --init --recursive
 RUN cd grpc \
     && mkdir -p cmake/build \
@@ -58,35 +58,35 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 FROM grpc-googleapis AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 --branch main https://github.com/drachtio/nuance-asr-grpc-api.git \
+RUN git clone --depth 1 -b main https://github.com/drachtio/nuance-asr-grpc-api.git \
     && cd nuance-asr-grpc-api \
     && LANGUAGE=cpp make
 
 FROM grpc-googleapis AS riva-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 --branch main https://github.com/drachtio/riva-asr-grpc-api.git \
+RUN git clone --depth 1 -b main https://github.com/drachtio/riva-asr-grpc-api.git \
     && cd riva-asr-grpc-api \
     && LANGUAGE=cpp make
 
 FROM grpc-googleapis AS soniox-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 --branch main https://github.com/drachtio/soniox-asr-grpc-api.git \
+RUN git clone --depth 1 -b main https://github.com/drachtio/soniox-asr-grpc-api.git \
     && cd soniox-asr-grpc-api \
     && LANGUAGE=cpp make
 
 FROM grpc-googleapis AS cobalt-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 --branch main https://github.com/drachtio/cobalt-asr-grpc-api.git \
+RUN git clone --depth 1 -b main https://github.com/drachtio/cobalt-asr-grpc-api.git \
     && cd cobalt-asr-grpc-api \
     && LANGUAGE=cpp make
         
 FROM base-cmake AS websockets
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 https://github.com/warmcat/libwebsockets.git -b v$LIBWEBSOCKETS_VERSION \
+RUN git clone --depth 1 -b v$LIBWEBSOCKETS_VERSION https://github.com/warmcat/libwebsockets.git \
     && cd /usr/local/src/libwebsockets \
     && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && make && make install
 
@@ -103,7 +103,7 @@ RUN tar xvfz SpeechSDK-Linux-$SPEECH_SDK_VERSION.tar.gz \
 
 FROM base AS freeswitch-modules
 WORKDIR /usr/local/src
-RUN git clone --depth 1 https://github.com/jambonz/freeswitch-modules.git -b $FREESWITCH_MODULES_VERSION
+RUN git clone --depth 1 -b $FREESWITCH_MODULES_VERSION https://github.com/jambonz/freeswitch-modules.git
 
 FROM base AS spandsp
 WORKDIR /usr/local/src
@@ -114,7 +114,7 @@ RUN git clone https://github.com/freeswitch/spandsp.git && cd spandsp && git che
 FROM base AS sofia-sip
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 https://github.com/freeswitch/sofia-sip.git -b v$SOFIA_VERSION \
+RUN git clone --depth 1 -b v$SOFIA_VERSION https://github.com/freeswitch/sofia-sip.git \
     && cd sofia-sip \
     && ./bootstrap.sh && ./configure && make -j ${BUILD_CPUS} && make install
 
@@ -128,7 +128,7 @@ RUN git clone --depth 1 https://github.com/dpirch/libfvad.git \
 FROM base-cmake AS aws-sdk-cpp
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 https://github.com/aws/aws-sdk-cpp.git -b $AWS_SDK_CPP_VERSION \
+RUN git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
     && cd aws-sdk-cpp \
     && git submodule update --init --recursive
 RUN cd /usr/local/src/aws-sdk-cpp \
@@ -169,7 +169,7 @@ COPY --from=websockets /usr/local/include/ /usr/local/include/
 COPY --from=websockets /usr/local/lib/ /usr/local/lib/
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 https://github.com/signalwire/freeswitch.git -b v$FREESWITCH_VERSION
+RUN git clone -b v$FREESWITCH_VERSION https://github.com/signalwire/freeswitch.git
 COPY --from=freeswitch-modules /usr/local/src/freeswitch-modules/ /usr/local/src/freeswitch/src/mod/applications/
 COPY --from=nuance-asr-grpc-api /usr/local/src/nuance-asr-grpc-api /usr/local/src/freeswitch/libs/nuance-asr-grpc-api
 COPY --from=riva-asr-grpc-api /usr/local/src/riva-asr-grpc-api /usr/local/src/freeswitch/libs/riva-asr-grpc-api
