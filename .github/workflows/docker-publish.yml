@@ -55,7 +55,7 @@ jobs:
         run: |
           echo "freeswitchModulesVersion=$(grep freeswitchModulesVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
-        id: prepare_freeswitch_moduls
+        id: prepare_freeswitch_modules
       - name: Read the value of the freeswitch version
         run: |
           echo "freeswitchVersion=$(grep freeswitchVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
@@ -100,7 +100,7 @@ jobs:
         with:
           context: .
           tags: ${{ steps.prepare_tag.outputs.image_id }}:${{ steps.prepare_tag.outputs.version }}
-          build-args: BUILD_CPUS=16,CMAKE_VERSION=${{ steps.prepare_cmake.outputs.cmakeVersion }},GRPC_VERSION=${{ steps.prepare_grpc.outputs.grpcVersion }},LIBWEBSOCKETS_VERSION=${{ steps.prepare_libwebsockets.outputs.libwebsocketsVersion }},SPEECH_SDK_VERSION=${{ steps.prepare_speech_sdk.outputs.speechSdkVersion }},SPANDSP_VERSION=${{ steps.prepare_spandsp.outputs.spandspVersion }},SOFIA_VERSION=${{ steps.prepare_sofia.outputs.sofiaVersion }},AWS_SDK_CPP_VERSION=${{ steps.prepare_aws_sdk_cpp.outputs.awsSdkCppVersion }},FREESWITCH_MODULES_VERSION=${{ steps.prepare_freeswitch_moduls.outputs.freeswitchModulesVersion }},FREESWITCH_VERSION=${{ steps.prepare_freeswitch.outputs.freeswitchVersion }}
+          build-args: BUILD_CPUS=16,CMAKE_VERSION=${{ steps.prepare_cmake.outputs.cmakeVersion }},GRPC_VERSION=${{ steps.prepare_grpc.outputs.grpcVersion }},LIBWEBSOCKETS_VERSION=${{ steps.prepare_libwebsockets.outputs.libwebsocketsVersion }},SPEECH_SDK_VERSION=${{ steps.prepare_speech_sdk.outputs.speechSdkVersion }},SPANDSP_VERSION=${{ steps.prepare_spandsp.outputs.spandspVersion }},SOFIA_VERSION=${{ steps.prepare_sofia.outputs.sofiaVersion }},AWS_SDK_CPP_VERSION=${{ steps.prepare_aws_sdk_cpp.outputs.awsSdkCppVersion }},FREESWITCH_MODULES_VERSION=${{ steps.prepare_freeswitch_modules.outputs.freeswitchModulesVersion }},FREESWITCH_VERSION=${{ steps.prepare_freeswitch.outputs.freeswitchVersion }}
           # For pull requests, export results to the build cache.
           # Otherwise, push to a registry.
           outputs: ${{ github.event_name == 'pull_request' && 'type=cacheonly' || 'type=registry,push=true' }}
