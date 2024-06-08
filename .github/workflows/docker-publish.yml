@@ -5,11 +5,10 @@ on:
     branches:
       - main
     tags:
-      - '*'
+      - "*"
 
 jobs:
   push:
-
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
@@ -17,15 +16,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Read the value of the cmake version        
+      - name: Read the value of the cmake version
         run: |
           echo "cmakeVersion=$(grep cmakeVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
-      - name: Read the value of the grpc version        
+      - name: Read the value of the grpc version
         run: |
           echo "grpcVersion=$(grep grpcVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
-      - name: Read the value of the libwebsocketsVersion version        
+      - name: Read the value of the libwebsocketsVersion version
         run: |
           echo "libwebsocketsVersion=$(grep libwebsocketsVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
@@ -35,7 +34,7 @@ jobs:
         shell: bash
       - name: Read the value of the spandsp version
         run: |
-          echo "spandspVersion=$(grep spandspVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT    
+          echo "spandspVersion=$(grep spandspVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
       - name: Read the value of the sofia version
         run: |
@@ -44,7 +43,7 @@ jobs:
       - name: Read the value of the aws SDK CPP version
         run: |
           echo "awsSdkCppVersion=$(grep awsSdkCppVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
-        shell: bash      
+        shell: bash
       - name: Read the value of the freeswitch modules version
         run: |
           echo "freeswitchModulesVersion=$(grep freeswitchModulesVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
@@ -54,27 +53,27 @@ jobs:
           echo "freeswitchVersion=$(grep freeswitchVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: prepare tag 
+      - name: prepare tag
         id: prepare_tag
         run: |
-            IMAGE_ID=drachtio/drachtio-freeswitch-mrf
+          IMAGE_ID=drachtio/drachtio-freeswitch-mrf
 
-            # Strip git ref prefix from version
-            VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
-            # Strip "v" prefix from tag name
-            [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
-            # Use Docker `latest` tag convention
-            [ "$VERSION" == "main" ] && VERSION=latest
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "main" ] && VERSION=latest
 
-            echo IMAGE_ID=$IMAGE_ID
-            echo VERSION=$VERSION
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
 
-            echo "image_id=$IMAGE_ID" >> $GITHUB_OUTPUT
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "image_id=$IMAGE_ID" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Login to Docker Hub 
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
