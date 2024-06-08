@@ -1,6 +1,6 @@
 # docker-drachtio-freeswitch-mrf
 
-A slim Freeswitch 1.8 image (~127 MB) designed for use with [drachtio-fsmrf](http://davehorton.github.io/drachtio-fsmrf/), based on the [docker-drachtio-freeswitch-base](https://hub.docker.com/r/drachtio/drachtio-freeswitch-base/) image.
+A slim Freeswitch 1.10 image (~620 MB) designed for use with [drachtio-fsmrf](http://davehorton.github.io/drachtio-fsmrf/), based on the [docker-drachtio-freeswitch-base](https://hub.docker.com/r/drachtio/drachtio-freeswitch-base/) image.
 
 To run with default options:
 ```bash

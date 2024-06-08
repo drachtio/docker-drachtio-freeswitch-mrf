@@ -39,7 +39,7 @@ RUN export CMAKE_VERSION=$CMAKE_VERSION \
 
 FROM base-cmake AS grpc
 WORKDIR /usr/local/src
-RUN git clone --depth 1 --branch v$GRPC_VERSION https://github.com/grpc/grpc && cd grpc \
+RUN git clone --depth 1 https://github.com/grpc/grpc -b v$GRPC_VERSION && cd grpc \
     && git submodule update --init --recursive
 RUN cd grpc \
     && mkdir -p cmake/build \
