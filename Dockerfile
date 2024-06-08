@@ -169,7 +169,7 @@ COPY --from=websockets /usr/local/include/ /usr/local/include/
 COPY --from=websockets /usr/local/lib/ /usr/local/lib/
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone -b v$FREESWITCH_VERSION https://github.com/signalwire/freeswitch.git
+RUN git clone --depth 1 -b v$FREESWITCH_VERSION https://github.com/signalwire/freeswitch.git
 COPY --from=freeswitch-modules /usr/local/src/freeswitch-modules/ /usr/local/src/freeswitch/src/mod/applications/
 COPY --from=nuance-asr-grpc-api /usr/local/src/nuance-asr-grpc-api /usr/local/src/freeswitch/libs/nuance-asr-grpc-api
 COPY --from=riva-asr-grpc-api /usr/local/src/riva-asr-grpc-api /usr/local/src/freeswitch/libs/riva-asr-grpc-api
