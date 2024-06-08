@@ -20,38 +20,47 @@ jobs:
         run: |
           echo "cmakeVersion=$(grep cmakeVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_cmake
       - name: Read the value of the grpc version
         run: |
           echo "grpcVersion=$(grep grpcVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_grpc
       - name: Read the value of the libwebsocketsVersion version
         run: |
           echo "libwebsocketsVersion=$(grep libwebsocketsVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_libwebsockets
       - name: Read the value of the speech SDK version
         run: |
           echo "speechSdkVersion=$(grep speechSdkVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_speech_sdk
       - name: Read the value of the spandsp version
         run: |
           echo "spandspVersion=$(grep spandspVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_spandsp
       - name: Read the value of the sofia version
         run: |
           echo "sofiaVersion=$(grep sofiaVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_sofia
       - name: Read the value of the aws SDK CPP version
         run: |
           echo "awsSdkCppVersion=$(grep awsSdkCppVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_aws_sdk_cpp
       - name: Read the value of the freeswitch modules version
         run: |
           echo "freeswitchModulesVersion=$(grep freeswitchModulesVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_freeswitch_moduls
       - name: Read the value of the freeswitch version
         run: |
           echo "freeswitchVersion=$(grep freeswitchVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
+        id: prepare_freeswitch
 
       - name: prepare tag
         id: prepare_tag
@@ -91,7 +100,7 @@ jobs:
         with:
           context: .
           tags: ${{ steps.prepare_tag.outputs.image_id }}:${{ steps.prepare_tag.outputs.version }}
-          build-args: BUILD_CPUS=16,CMAKE_VERSION=${{ steps.prepare_tag.outputs.cmakeVersion }},GRPC_VERSION=${{ steps.prepare_tag.outputs.grpcVersion }},LIBWEBSOCKETS_VERSION=${{ steps.prepare_tag.outputs.libwebsocketsVersion }},SPEECH_SDK_VERSION=${{ steps.prepare_tag.outputs.speechSdkVersion }},SPANDSP_VERSION=${{ steps.prepare_tag.outputs.spandspVersion }},SOFIA_VERSION=${{ steps.prepare_tag.outputs.sofiaVersion }},AWS_SDK_CPP_VERSION=${{ steps.prepare_tag.outputs.awsSdkCppVersion }},FREESWITCH_MODULES_VERSION=${{ steps.prepare_tag.outputs.freeswitchModulesVersion }},FREESWITCH_VERSION=${{ steps.prepare_tag.outputs.freeswitchVersion }}
+          build-args: BUILD_CPUS=16,CMAKE_VERSION=${{ steps.prepare_cmake.outputs.cmakeVersion }},GRPC_VERSION=${{ steps.prepare_grpc.outputs.grpcVersion }},LIBWEBSOCKETS_VERSION=${{ steps.prepare_libwebsockets.outputs.libwebsocketsVersion }},SPEECH_SDK_VERSION=${{ steps.prepare_speech_sdk.outputs.speechSdkVersion }},SPANDSP_VERSION=${{ steps.prepare_spandsp.outputs.spandspVersion }},SOFIA_VERSION=${{ steps.prepare_sofia.outputs.sofiaVersion }},AWS_SDK_CPP_VERSION=${{ steps.prepare_aws_sdk_cpp.outputs.awsSdkCppVersion }},FREESWITCH_MODULES_VERSION=${{ steps.prepare_freeswitch_moduls.outputs.freeswitchModulesVersion }},FREESWITCH_VERSION=${{ steps.prepare_freeswitch.outputs.freeswitchVersion }}
           # For pull requests, export results to the build cache.
           # Otherwise, push to a registry.
           outputs: ${{ github.event_name == 'pull_request' && 'type=cacheonly' || 'type=registry,push=true' }}
