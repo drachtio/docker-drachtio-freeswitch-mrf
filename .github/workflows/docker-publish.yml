@@ -17,32 +17,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Read the value of the cmake version
-        run: echo "##vso[task.setvariable variable=cmakeVersion]$(grep cmakeVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+      - name: Read the value of the cmake version        
+        run: |
+          echo "cmakeVersion=$(grep cmakeVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
-      - name: Read the value of the grpc version
-        run: echo "##vso[task.setvariable variable=grpcVersion]$(grep grpcVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+      - name: Read the value of the grpc version        
+        run: |
+          echo "grpcVersion=$(grep grpcVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
-      - name: Read the value of the libwebsocketsVersion version
-        run: echo "##vso[task.setvariable variable=libwebsocketsVersion]$(grep libwebsocketsVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+      - name: Read the value of the libwebsocketsVersion version        
+        run: |
+          echo "libwebsocketsVersion=$(grep libwebsocketsVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
       - name: Read the value of the speech SDK version
-        run: echo "##vso[task.setvariable variable=speechSdkVersion]$(grep speechSdkVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        run: |
+          echo "speechSdkVersion=$(grep speechSdkVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
       - name: Read the value of the spandsp version
-        run: echo "##vso[task.setvariable variable=spandspVersion]$(grep spandspVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        run: |
+          echo "spandspVersion=$(grep spandspVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT    
         shell: bash
       - name: Read the value of the sofia version
-        run: echo "##vso[task.setvariable variable=sofiaVersion]$(grep sofiaVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        run: |
+          echo "sofiaVersion=$(grep sofiaVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
       - name: Read the value of the aws SDK CPP version
-        run: echo "##vso[task.setvariable variable=awsSdkCppVersion]$(grep awsSdkCppVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        run: |
+          echo "awsSdkCppVersion=$(grep awsSdkCppVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash      
       - name: Read the value of the freeswitch modules version
-        run: echo "##vso[task.setvariable variable=freeswitchModulesVersion]$(grep freeswitchModulesVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        run: |
+          echo "freeswitchModulesVersion=$(grep freeswitchModulesVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
       - name: Read the value of the freeswitch version
-        run: echo "##vso[task.setvariable variable=freeswitchVersion]$(grep freeswitchVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')"
+        run: |
+          echo "freeswitchVersion=$(grep freeswitchVersion $(Build.Repository.LocalPath)/.env | awk -F '=' '{print $2}')" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: prepare tag 
@@ -83,7 +92,7 @@ jobs:
         with:
           context: .
           tags: ${{ steps.prepare_tag.outputs.image_id }}:${{ steps.prepare_tag.outputs.version }}
-          build-args: BUILD_CPUS=16
+          build-args: BUILD_CPUS=16,CMAKE_VERSION=${{ steps.prepare_tag.outputs.cmakeVersion }},GRPC_VERSION=${{ steps.prepare_tag.outputs.grpcVersion }},LIBWEBSOCKETS_VERSION=${{ steps.prepare_tag.outputs.libwebsocketsVersion }},SPEECH_SDK_VERSION=${{ steps.prepare_tag.outputs.speechSdkVersion }},SPANDSP_VERSION=${{ steps.prepare_tag.outputs.spandspVersion }},SOFIA_VERSION=${{ steps.prepare_tag.outputs.sofiaVersion }},AWS_SDK_CPP_VERSION=${{ steps.prepare_tag.outputs.awsSdkCppVersion }},FREESWITCH_MODULES_VERSION=${{ steps.prepare_tag.outputs.freeswitchModulesVersion }},FREESWITCH_VERSION=${{ steps.prepare_tag.outputs.freeswitchVersion }}
           # For pull requests, export results to the build cache.
           # Otherwise, push to a registry.
           outputs: ${{ github.event_name == 'pull_request' && 'type=cacheonly' || 'type=registry,push=true' }}
