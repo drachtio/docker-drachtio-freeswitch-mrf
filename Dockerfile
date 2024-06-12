@@ -92,7 +92,7 @@ RUN tar xvfz SpeechSDK-Linux-1.37.0.tar.gz \
     && if [ "$TARGETARCH" = "aarch64" ]; then \
            cp /usr/local/lib/MicrosoftSpeechSDK/arm64/libMicrosoft.*.so /usr/local/lib/; \
        else \
-           cp /usr/local/lib/MicrosoftSpeechSDK/x86/libMicrosoft.*.so /usr/local/lib/; \
+           cp /usr/local/lib/MicrosoftSpeechSDK/x64/libMicrosoft.*.so /usr/local/lib/; \
        fi \
     && ls -lrt /usr/local/lib/
 
