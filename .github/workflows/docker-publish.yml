@@ -21,7 +21,7 @@ jobs:
         run: |
           for var in cmakeVersion grpcVersion libwebsocketsVersion speechSdkVersion spandspVersion sofiaVersion awsSdkCppVersion freeswitchModulesVersion freeswitchVersion; do
             value=$(grep "$var" .env | cut -d'=' -f2)
-            echo "$var=$value" >> $GITHUB_ENV
+            echo "$var=$value" >> $GITHUB_OUTPUT
           done
         shell: bash
 
@@ -62,17 +62,18 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.prepare_tag.outputs.image_id }}:${{ steps.prepare_tag.outputs.version }}
-          build-args: |
+          build-args: | 
             BUILD_CPUS=16
-            CMAKE_VERSION=${{ env.cmakeVersion }}
-            GRPC_VERSION=${{ env.grpcVersion }}
-            LIBWEBSOCKETS_VERSION=${{ env.libwebsocketsVersion }}
-            SPEECH_SDK_VERSION=${{ env.speechSdkVersion }}
-            SPANDSP_VERSION=${{ env.spandspVersion }}
-            SOFIA_VERSION=${{ env.sofiaVersion }}
-            AWS_SDK_CPP_VERSION=${{ env.awsSdkCppVersion }}
-            FREESWITCH_MODULES_VERSION=${{ env.freeswitchModulesVersion }}
-            FREESWITCH_VERSION=${{ env.freeswitchVersion }}
+            CMAKE_VERSION=${{ steps.env_vars.outputs.cmakeVersion }}
+            GRPC_VERSION=${{ steps.env_vars.outputs.grpcVersion }}
+            LIBWEBSOCKETS_VERSION=${{ steps.env_vars.outputs.libwebsocketsVersion }}
+            SPEECH_SDK_VERSION=${{ steps.env_vars.outputs.speechSdkVersion }}
+            SPANDSP_VERSION=${{ steps.env_vars.outputs.spandspVersion }}
+            SOFIA_VERSION=${{ steps.env_vars.outputs.sofiaVersion }}
+            AWS_SDK_CPP_VERSION=${{ steps.env_vars.outputs.awsSdkCppVersion }}
+            FREESWITCH_MODULES_VERSION=${{ steps.env_vars.outputs.freeswitchModulesVersion }}
+            FREESWITCH_VERSION=${{ steps.env_vars.outputs.freeswitchVersion }}
+          # For pull requests, export results to the build cache.
+          # Otherwise, push to a registry.
           outputs: ${{ github.event_name == 'pull_request' && 'type=cacheonly' || 'type=registry,push=true' }}
