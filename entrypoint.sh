@@ -17,7 +17,7 @@ while :; do
     shift
     ;;
 
-  --g711-only-eu)
+  --g711-only-alaw-preferred)
       sed -i -e "s/global_codec_prefs=.*\"/global_codec_prefs=PCMA,PCMU\"/g" /usr/local/freeswitch/conf/vars.xml
       sed -i -e "s/outbound_codec_prefs=.*\"/outbound_codec_prefs=PCMA,PCMU\"/g" /usr/local/freeswitch/conf/vars.xml
     shift
