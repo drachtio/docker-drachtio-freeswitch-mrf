@@ -17,6 +17,12 @@ while :; do
     shift
     ;;
 
+  --g711-only-alaw-preferred)
+      sed -i -e "s/global_codec_prefs=.*\"/global_codec_prefs=PCMA,PCMU\"/g" /usr/local/freeswitch/conf/vars.xml
+      sed -i -e "s/outbound_codec_prefs=.*\"/outbound_codec_prefs=PCMA,PCMU\"/g" /usr/local/freeswitch/conf/vars.xml
+    shift
+    ;;
+
   -s|--sip-port)
     if [ -n "$2" ]; then
       sed -i -e "s/sip_port=[[:digit:]]\+/sip_port=$2/g" /usr/local/freeswitch/conf/vars_diff.xml
