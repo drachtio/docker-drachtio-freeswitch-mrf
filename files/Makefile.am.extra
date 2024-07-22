@@ -438,8 +438,19 @@ libs/cobalt-asr-grpc-api/stubs/cobaltspeech/transcribe/v5/transcribe.grpc.pb.cc
 
 libfreeswitch_libcobaltapis_la_CPPFLAGS = -I/usr/local/include -I$(COBALT_GENS_PATH) -I./libs/googleapis/gens -std=c++17  -pthread
 
-CORE_LIBS+=libfreeswitch_libgoogleapis.la libfreeswitch_libnuanceapis.la libfreeswitch_libnvidiaapis.la libfreeswitch_libsonioxapis.la libfreeswitch_libcobaltapis.la
-noinst_LTLIBRARIES += libfreeswitch_libgoogleapis.la libfreeswitch_libnuanceapis.la libfreeswitch_libnvidiaapis.la libfreeswitch_libsonioxapis.la libfreeswitch_libcobaltapis.la
+#verbio asr
+nodist_libfreeswitch_libverbioapis_la_SOURCES = \
+libs/verbio-asr-grpc-api/stubs/speechcenter/recognizer/v1/recognition_streaming_request.pb.cc \
+libs/verbio-asr-grpc-api/stubs/speechcenter/recognizer/v1/recognition_streaming_response.pb.cc \
+libs/verbio-asr-grpc-api/stubs/speechcenter/recognizer/v1/recognition_streaming_request.grpc.pb.cc \
+libs/verbio-asr-grpc-api/stubs/speechcenter/recognizer/v1/recognition_streaming_response.grpc.pb.cc \
+libs/verbio-asr-grpc-api/stubs/speechcenter/recognizer/v1/recognition.pb.cc \
+libs/verbio-asr-grpc-api/stubs/speechcenter/recognizer/v1/recognition.grpc.pb.cc
+
+libfreeswitch_libverbioapis_la_CPPFLAGS = -I/usr/local/include -I/usr/local/src/freeswitch/libs/verbio-asr-grpc-api/stubs -std=c++17 -pthread
+
+CORE_LIBS+=libfreeswitch_libgoogleapis.la libfreeswitch_libnuanceapis.la libfreeswitch_libnvidiaapis.la libfreeswitch_libsonioxapis.la libfreeswitch_libcobaltapis.la libfreeswitch_libverbioapis.la
+noinst_LTLIBRARIES += libfreeswitch_libgoogleapis.la libfreeswitch_libnuanceapis.la libfreeswitch_libnvidiaapis.la libfreeswitch_libsonioxapis.la libfreeswitch_libcobaltapis.la libfreeswitch_libverbioapis.la
 
 endif
 

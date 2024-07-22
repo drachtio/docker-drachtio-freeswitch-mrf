@@ -18,6 +18,9 @@ applications/mod_nvidia_transcribe
 applications/mod_playht_tts
 applications/mod_rimelabs_tts
 applications/mod_soniox_transcribe
+applications/mod_verbio_transcribe
+applications/mod_verbio_tts
+applications/mod_vad_detect
 applications/mod_dialogflow
 #applications/mod_abstraction
 #applications/mod_av

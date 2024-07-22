@@ -1,0 +1,13 @@
+--- ops-ws.c	2024-07-19 17:00:55
++++ ops-ws.c.new	2024-07-19 17:02:20
+@@ -1230,7 +1230,9 @@
+ 			 * Something has gone wrong, we are spinning...
+ 			 * let's bail on this connection
+ 			 */
+-			return LWS_HPI_RET_PLEASE_CLOSE_ME;
++			//return LWS_HPI_RET_PLEASE_CLOSE_ME;
++                        //DH: this can happen with bidirectional audio
++	                return LWS_HPI_RET_HANDLED;
+ 	}
+ 
+ 	if (buffered && /* were draining, now nothing left */
