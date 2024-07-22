@@ -2173,6 +2173,9 @@ AC_CONFIG_FILES([Makefile
     src/mod/applications/mod_playht_tts/Makefile
     src/mod/applications/mod_rimelabs_tts/Makefile
     src/mod/applications/mod_soniox_transcribe/Makefile
+    src/mod/applications/mod_verbio_transcribe/Makefile
+    src/mod/applications/mod_verbio_tts/Makefile
+    src/mod/applications/mod_vad_detect/Makefile
     src/mod/applications/mod_dialogflow/Makefile
 		src/mod/applications/mod_abstraction/Makefile
 		src/mod/applications/mod_avmd/Makefile

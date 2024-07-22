@@ -21,6 +21,9 @@
       <load module="mod_soniox_transcribe"/>
       <load module="mod_jambonz_transcribe"/>
       <load module="mod_dialogflow"/>
+      <load module="mod_verbio_transcribe"/>
+      <load module="mod_verbio_tts"/>
+      <load module="mod_vad_detect"/>
 
       <!-- Loggers (I'd load these first) -->
       <load module="mod_console"/>

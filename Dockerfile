@@ -93,10 +93,21 @@ RUN git clone --depth 1 -b main https://github.com/drachtio/cobalt-asr-grpc-api.
     && cd cobalt-asr-grpc-api \
     && LANGUAGE=cpp make
         
+FROM grpc-googleapis AS verbio-asr-grpc-api
+WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+RUN git clone --depth 1 -b main https://github.com/drachtio/verbio-asr-grpc-api.git \
+    && cd verbio-asr-grpc-api \
+    && LANGUAGE=cpp make
+        
 FROM base-cmake AS websockets
+COPY ./files/ops-ws.c.path /tmp/
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 -b v$LIBWEBSOCKETS_VERSION https://github.com/warmcat/libwebsockets.git \
+    && cd /usr/local/src/libwebsockets/lib/roles/ws \
+    && cp /tmp/ops-ws.c.patch . \
+    && patch ops-ws.c < ops-ws.c.patch \
     && cd /usr/local/src/libwebsockets \
     && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && make && make install
 
@@ -185,6 +196,7 @@ COPY --from=nuance-asr-grpc-api /usr/local/src/nuance-asr-grpc-api /usr/local/sr
 COPY --from=riva-asr-grpc-api /usr/local/src/riva-asr-grpc-api /usr/local/src/freeswitch/libs/riva-asr-grpc-api
 COPY --from=soniox-asr-grpc-api /usr/local/src/soniox-asr-grpc-api /usr/local/src/freeswitch/libs/soniox-asr-grpc-api
 COPY --from=cobalt-asr-grpc-api /usr/local/src/cobalt-asr-grpc-api /usr/local/src/freeswitch/libs/cobalt-asr-grpc-api
+COPY --from=verbio-asr-grpc-api /usr/local/src/cobalt-asr-grpc-api /usr/local/src/freeswitch/libs/verbio-asr-grpc-api
 COPY --from=grpc-googleapis /usr/local/src/googleapis /usr/local/src/freeswitch/libs/googleapis
 RUN cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac \
     && cp /tmp/Makefile.am.extra /usr/local/src/freeswitch/Makefile.am \
