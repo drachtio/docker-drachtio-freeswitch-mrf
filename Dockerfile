@@ -101,7 +101,7 @@ RUN git clone --depth 1 -b main https://github.com/drachtio/verbio-asr-grpc-api.
     && LANGUAGE=cpp make
         
 FROM base-cmake AS websockets
-COPY ./files/ops-ws.c.path /tmp/
+COPY ./files/ops-ws.c.patch /tmp/
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 -b v$LIBWEBSOCKETS_VERSION https://github.com/warmcat/libwebsockets.git \
