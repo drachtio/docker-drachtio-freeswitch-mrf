@@ -154,19 +154,23 @@ RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && mkdir -p build && cd build \
     && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS="-Wno-error=maybe-uninitialized" -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
     && make -j ${BUILD_CPUS} && make install \
+    && echo "done building aws-c-common" \
     && cd /usr/local/src \
     && git clone --recursive --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
     && cd aws-crt-cpp \
     && mkdir -p build && cd build \
-    && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON \
+    && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON -DCMAKE_C_FLAGS="-Wno-error=maybe-uninitialized" -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
     && make -j ${BUILD_CPUS} && make install \
+    && echo "done building aws-crt-cpp" \
     && cd /usr/local/src \
     && git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
     && cd aws-sdk-cpp \
     && git submodule update --init --recursive \
     && mkdir -p build && cd build \
+    && echo "building aws-sdk-cpp" \
     && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS="-Wno-error=maybe-uninitialized" -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
     && make -j ${BUILD_CPUS} && make install \
+    && echo "done building aws-sdk-cpp" \
     && mkdir -p /usr/local/lib/pkgconfig \
     && find /usr/local/src/aws-sdk-cpp/ -type f -name "*.pc" | xargs cp -t /usr/local/lib/pkgconfig/
 
