@@ -32,7 +32,7 @@ RUN for i in $(seq 1 8); do mkdir -p "/usr/share/man/man${i}"; done \
     libevent-dev libpcap-dev libxmlrpc-core-c3-dev markdown libjson-glib-dev lsb-release libpq-dev php-dev \
     libhiredis-dev gperf libspandsp-dev default-libmysqlclient-dev htop dnsutils gdb libtcmalloc-minimal4 \
     gnupg2 wget pkg-config ca-certificates libjpeg-dev libsqlite3-dev libpcre3-dev libldns-dev libboost-all-dev \
-    libspeex-dev libspeexdsp-dev libedit-dev libtiff-dev yasm libswscale-dev haveged libre2-dev \
+    libspeex-dev libspeexdsp-dev libedit-dev libtiff6 yasm libswscale-dev haveged libre2-dev \
     libopus-dev libsndfile-dev libshout3-dev libmpg123-dev libmp3lame-dev libopusfile-dev libgoogle-perftools-dev \
     && git config --global http.postBuffer 524288000  \
   	&& git config --global https.postBuffer 524288000 \
@@ -275,7 +275,7 @@ COPY --from=freeswitch /usr/local/freeswitch/ /usr/local/freeswitch/
 COPY --from=freeswitch /usr/local/bin/ /usr/local/bin/
 COPY --from=freeswitch /usr/local/lib/ /usr/local/lib/
 COPY --from=freeswitch $LIB_DIR/ /usr/lib/
-RUN apt update && apt-cache search libtiff && apt install -y --quiet --no-install-recommends ca-certificates libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff5 libopus0 libsndfile1 libshout3 \
+RUN apt update && apt install -y --quiet --no-install-recommends ca-certificates libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff6 libopus0 libsndfile1 libshout3 \
     && ldconfig && rm -rf /var/lib/apt/lists/*
 
 ENV PATH="/usr/local/freeswitch/bin:${PATH}"
