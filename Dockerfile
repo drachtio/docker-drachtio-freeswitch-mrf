@@ -154,15 +154,16 @@ RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && mkdir -p build && cd build \
     && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter" \
     && make -j ${BUILD_CPUS} && make install \
+    && cd /usr/local/src \
     && git clone --recursive --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
     && cd aws-crt-cpp \
     && mkdir -p build && cd build \
     && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON \
     && make -j ${BUILD_CPUS} && make install \
+    && cd /usr/local/src \
     && git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
     && cd aws-sdk-cpp \
     && git submodule update --init --recursive \
-    && cd /usr/local/src/aws-sdk-cpp \
     && mkdir -p build && cd build \
     && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
     && echo "patching aws-sdk-cpp to fix warnings treated as errors" \
