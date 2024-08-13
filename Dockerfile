@@ -68,7 +68,7 @@ FROM grpc AS grpc-googleapis
 WORKDIR /usr/local/src
 RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
     && LANGUAGE=cpp make -j ${BUILD_CPUS}
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 
 FROM grpc-googleapis AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
