@@ -250,6 +250,7 @@ RUN cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac \
     && sed -i '/#ifndef cJSON_AS4CPP__h/i #ifndef cJSON__h\n#define cJSON__h' /usr/local/include/aws/core/external/cjson/cJSON.h \
     && echo '#endif' >> /usr/local/include/aws/core/external/cjson/cJSON.h \
     && cd /usr/local/src/freeswitch \
+    && export LDFLAGS="-L/usr/local/lib -lprotobuf -lgrpc++" \
     && ./bootstrap.sh -j \
     && ./configure --enable-tcmalloc=yes --with-lws=yes --with-extra=yes --with-aws=yes
 RUN cd /usr/local/src/freeswitch \
