@@ -41,6 +41,7 @@ RUN for i in $(seq 1 8); do mkdir -p "/usr/share/man/man${i}"; done \
 FROM base AS base-cmake
 WORKDIR /usr/local/src
 RUN export CMAKE_VERSION=$CMAKE_VERSION \
+    && cmake --version || true \
     && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh \
     && chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh \
     && ./cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license --prefix=/usr/local \
@@ -145,37 +146,44 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 https://github.com/dpirch/libfvad.git \
     && cd libfvad \
     && autoreconf -i && ./configure && make -j ${BUILD_CPUS} && make install
-            
+
 FROM base-cmake AS aws-sdk-cpp
+WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+RUN git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
+    && cd aws-sdk-cpp \
+    && git submodule update --init --recursive
+RUN cd /usr/local/src/aws-sdk-cpp \
+    && mkdir -p build && cd build \
+    && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized" \
+    && make -j ${BUILD_CPUS} && make install \
+    && mkdir -p /usr/local/lib/pkgconfig \
+    && find /usr/local/src/aws-sdk-cpp/ -type f -name "*.pc" | xargs cp -t /usr/local/lib/pkgconfig/
+
+FROM base-cmake AS aws-c-common
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && cd aws-c-common \
     && mkdir -p build && cd build \
-    && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS="-Wno-error=maybe-uninitialized" -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
-    && make -j ${BUILD_CPUS} && make install \
-    && echo "done building aws-c-common" \
-    && cd /usr/local/src \
-    && git clone --recursive --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
+    && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=OFF -DCMAKE_CXX_FLAGS="-Wno-unused-parameter" \
+    && make -j ${BUILD_CPUS} && make install
+
+FROM base-cmake AS aws-crt-cpp
+WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+RUN git clone --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
     && cd aws-crt-cpp \
     && mkdir -p build && cd build \
-    && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON -DCMAKE_C_FLAGS="-Wno-error=maybe-uninitialized" -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
-    && make -j ${BUILD_CPUS} && make install \
-    && echo "done building aws-crt-cpp" \
-    && cd /usr/local/src \
-    && git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
-    && cd aws-sdk-cpp \
-    && git submodule update --init --recursive \
-    && mkdir -p build && cd build \
-    && echo "building aws-sdk-cpp" \
-    && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS="-Wno-error=maybe-uninitialized" -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
-    && make -j ${BUILD_CPUS} && make install \
-    && echo "done building aws-sdk-cpp" \
-    && mkdir -p /usr/local/lib/pkgconfig \
-    && find /usr/local/src/aws-sdk-cpp/ -type f -name "*.pc" | xargs cp -t /usr/local/lib/pkgconfig/
-
+    && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON \
+    && make -j ${BUILD_CPUS} && make install
+    
 FROM base AS freeswitch
 COPY ./files/ /tmp/
+COPY --from=aws-c-common /usr/local/include/ /usr/local/include/
+COPY --from=aws-c-common /usr/local/lib/ /usr/local/lib/
+COPY --from=aws-crt-cpp /usr/local/include/ /usr/local/include/
+COPY --from=aws-crt-cpp /usr/local/lib/ /usr/local/lib/
 COPY --from=aws-sdk-cpp /usr/local/include/ /usr/local/include/
 COPY --from=aws-sdk-cpp /usr/local/lib/ /usr/local/lib/
 COPY --from=grpc /usr/local/include/ /usr/local/include/
