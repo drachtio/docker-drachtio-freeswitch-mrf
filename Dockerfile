@@ -145,8 +145,8 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 https://github.com/dpirch/libfvad.git \
     && cd libfvad \
     && autoreconf -i && ./configure && make -j ${BUILD_CPUS} && make install
-
-FROM base-cmake AS aws-c-common
+            
+FROM base-cmake AS aws-sdk-cpp
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
@@ -154,19 +154,11 @@ RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && mkdir -p build && cd build \
     && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=OFF -DCMAKE_CXX_FLAGS="-Wno-unused-parameter" \
     && make -j ${BUILD_CPUS} && make install
-        
-FROM base-cmake AS aws-crt-cpp
-WORKDIR /usr/local/src
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --recursive --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
     && cd aws-crt-cpp \
     && mkdir -p build && cd build \
     && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON \
     && make -j ${BUILD_CPUS} && make install
-    
-FROM base-cmake AS aws-sdk-cpp
-WORKDIR /usr/local/src
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
     && cd aws-sdk-cpp \
     && git submodule update --init --recursive
@@ -179,10 +171,6 @@ RUN cd /usr/local/src/aws-sdk-cpp \
 
 FROM base AS freeswitch
 COPY ./files/ /tmp/
-COPY --from=aws-c-common /usr/local/include/ /usr/local/include/
-COPY --from=aws-c-common /usr/local/lib/ /usr/local/lib/
-COPY --from=aws-crt-cpp /usr/local/include/ /usr/local/include/
-COPY --from=aws-crt-cpp /usr/local/lib/ /usr/local/lib/
 COPY --from=aws-sdk-cpp /usr/local/include/ /usr/local/include/
 COPY --from=aws-sdk-cpp /usr/local/lib/ /usr/local/lib/
 COPY --from=grpc /usr/local/include/ /usr/local/include/
