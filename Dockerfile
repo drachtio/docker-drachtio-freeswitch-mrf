@@ -66,16 +66,16 @@ RUN ldconfig /usr/local/lib
 
 FROM grpc AS grpc-googleapis
 WORKDIR /usr/local/src
-RUN git clone https://github.com/googleapis/googleapis -b master && cd googleapis \
+RUN git clone https://github.com/googleapis/googleapis && cd googleapis && git checkout d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57 \
     && LANGUAGE=cpp make -j ${BUILD_CPUS}
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH
 
 FROM grpc-googleapis AS nuance-asr-grpc-api
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 -b main https://github.com/drachtio/nuance-asr-grpc-api.git \
     && cd nuance-asr-grpc-api \
-    && LANGUAGE=cpp make
+    && LANGUAGE=cpp make 
 
 FROM grpc-googleapis AS riva-asr-grpc-api
 WORKDIR /usr/local/src
@@ -226,11 +226,7 @@ COPY --from=soniox-asr-grpc-api /usr/local/src/soniox-asr-grpc-api /usr/local/sr
 COPY --from=cobalt-asr-grpc-api /usr/local/src/cobalt-asr-grpc-api /usr/local/src/freeswitch/libs/cobalt-asr-grpc-api
 COPY --from=verbio-asr-grpc-api /usr/local/src/verbio-asr-grpc-api /usr/local/src/freeswitch/libs/verbio-asr-grpc-api
 COPY --from=grpc-googleapis /usr/local/src/googleapis /usr/local/src/freeswitch/libs/googleapis
-RUN echo "searching for descriptor_table_google_2fapi_2ffield_5finfo_2eproto" \
-    && find /usr/local/lib /usr/local/src -name '*.a' -o -name '*.so' | xargs nm -g | grep 'descriptor_table_google_2fapi_2ffield_5finfo_2eproto' \
-    && echo "searching again for descriptor_table_google_2fapi_2ffield_5finfo_2eproto" \
-    && find /usr/local/lib /usr/local/src -name '*.a' -o -name '*.so' | xargs objdump -t | grep 'descriptor_table_google_2fapi_2ffield_5finfo_2eproto' \
-    && cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac \
+RUN cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac \
     && cp /tmp/Makefile.am.extra /usr/local/src/freeswitch/Makefile.am \
     && cp /tmp/ax_check_compile_flag.m4 /usr/local/src/freeswitch/ax_check_compile_flag.m4 \
     && cp /tmp/modules.conf.in.extra /usr/local/src/freeswitch/build/modules.conf.in \
