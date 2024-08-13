@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS base
+FROM debian:bookworm-slim AS base
 
 ARG BUILD_CPUS=1
 
@@ -240,7 +240,7 @@ RUN cd /usr/local/src/freeswitch \
 	  && sed -i -e 's/global_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/global_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml \
 	  && sed -i -e 's/outbound_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/outbound_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml
 
-FROM debian:bullseye-slim AS final
+FROM debian:bookworm-slim AS final
 ARG TARGETARCH
 ENV LIB_DIR=/usr/lib/x86_64-linux-gnu
 RUN if [ "$TARGETARCH" = "arm64" ]; then LIB_DIR=/usr/lib/aarch64-linux-gnu; fi
