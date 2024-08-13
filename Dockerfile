@@ -152,7 +152,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && cd aws-c-common \
     && mkdir -p build && cd build \
-    && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter" \
+    && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=maybe-uninitialized" \
     && make -j ${BUILD_CPUS} && make install \
     && cd /usr/local/src \
     && git clone --recursive --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
