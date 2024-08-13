@@ -104,7 +104,7 @@ FROM base-cmake AS websockets
 COPY ./files/ops-ws.c.patch /tmp/
 WORKDIR /usr/local/src
 ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 -b v$LIBWEBSOCKETS_VERSION https://github.com/warmcat/libwebsockets.git \
+RUN git clone --depth 1 -b $LIBWEBSOCKETS_VERSION https://github.com/warmcat/libwebsockets.git \
     && cd /usr/local/src/libwebsockets/lib/roles/ws \
     && cp /tmp/ops-ws.c.patch . \
     && patch ops-ws.c < ops-ws.c.patch \
