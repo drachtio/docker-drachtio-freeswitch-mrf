@@ -226,7 +226,11 @@ COPY --from=soniox-asr-grpc-api /usr/local/src/soniox-asr-grpc-api /usr/local/sr
 COPY --from=cobalt-asr-grpc-api /usr/local/src/cobalt-asr-grpc-api /usr/local/src/freeswitch/libs/cobalt-asr-grpc-api
 COPY --from=verbio-asr-grpc-api /usr/local/src/verbio-asr-grpc-api /usr/local/src/freeswitch/libs/verbio-asr-grpc-api
 COPY --from=grpc-googleapis /usr/local/src/googleapis /usr/local/src/freeswitch/libs/googleapis
-RUN cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac \
+RUN echo "searching for descriptor_table_google_2fapi_2ffield_5finfo_2eproto" \
+    && find /usr/local/lib /usr/local/src -name '*.a' -o -name '*.so' | xargs nm -g | grep 'descriptor_table_google_2fapi_2ffield_5finfo_2eproto' \
+    && echo "searching again for descriptor_table_google_2fapi_2ffield_5finfo_2eproto" \
+    && find /usr/local/lib /usr/local/src -name '*.a' -o -name '*.so' | xargs objdump -t | grep 'descriptor_table_google_2fapi_2ffield_5finfo_2eproto' \
+    && cp /tmp/configure.ac.extra /usr/local/src/freeswitch/configure.ac \
     && cp /tmp/Makefile.am.extra /usr/local/src/freeswitch/Makefile.am \
     && cp /tmp/ax_check_compile_flag.m4 /usr/local/src/freeswitch/ax_check_compile_flag.m4 \
     && cp /tmp/modules.conf.in.extra /usr/local/src/freeswitch/build/modules.conf.in \
