@@ -64,7 +64,7 @@ jobs:
           context: .
           tags: ${{ steps.prepare_tag.outputs.image_id }}:${{ steps.prepare_tag.outputs.version }}
           build-args: | 
-            BUILD_CPUS=6
+            BUILD_CPUS=1
             CMAKE_VERSION=${{ steps.env_vars.outputs.cmakeVersion }}
             GRPC_VERSION=${{ steps.env_vars.outputs.grpcVersion }}
             LIBWEBSOCKETS_VERSION=${{ steps.env_vars.outputs.libwebsocketsVersion }}
