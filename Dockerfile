@@ -152,19 +152,24 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
     && cd aws-c-common \
     && mkdir -p build && cd build \
-    && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=OFF -DCMAKE_CXX_FLAGS="-Wno-unused-parameter" \
-    && make -j ${BUILD_CPUS} && make install
-RUN git clone --recursive --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
+    && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter" \
+    && make -j ${BUILD_CPUS} && make install \
+    && git clone --recursive --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
     && cd aws-crt-cpp \
     && mkdir -p build && cd build \
     && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON \
-    && make -j ${BUILD_CPUS} && make install
-RUN git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
+    && make -j ${BUILD_CPUS} && make install \
+    && git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
     && cd aws-sdk-cpp \
-    && git submodule update --init --recursive
-RUN cd /usr/local/src/aws-sdk-cpp \
+    && git submodule update --init --recursive \
+    && cd /usr/local/src/aws-sdk-cpp \
     && mkdir -p build && cd build \
-    && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized" \
+    && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
+    && echo "patching aws-sdk-cpp to fix warnings treated as errors" \
+    && sed -i 's/uint8_t arr\[16\];/uint8_t arr\[16\] = {0};/g' /usr/local/src/freeswitch/libs/aws-sdk-cpp/build/.deps/build/src/AwsCCommon/tests/byte_buf_test.c \
+    && sed -i 's/char filename_array\[64\];/char filename_array\[64\] = {0};/g' /usr/local/src/freeswitch/libs/aws-sdk-cpp/build/.deps/build/src/AwsCCommon/tests/logging/logging_test_utilities.c \
+    && echo "re-running cmake after patching aws-sdk-cpp" \
+    && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds" \
     && make -j ${BUILD_CPUS} && make install \
     && mkdir -p /usr/local/lib/pkgconfig \
     && find /usr/local/src/aws-sdk-cpp/ -type f -name "*.pc" | xargs cp -t /usr/local/lib/pkgconfig/
