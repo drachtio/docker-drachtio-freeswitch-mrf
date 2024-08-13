@@ -38,16 +38,89 @@ RUN for i in $(seq 1 8); do mkdir -p "/usr/share/man/man${i}"; done \
   	&& git config --global https.postBuffer 524288000 \
 	  && git config --global pull.rebase true
 
-FROM base AS base-cmake
-WORKDIR /usr/local/src
-RUN export CMAKE_VERSION=$CMAKE_VERSION \
-    && cmake --version || true \
-    && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh \
-    && chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh \
-    && ./cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license --prefix=/usr/local \
-    && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.sh \
-    && cmake --version
+FROM base AS speechsdk
+ARG TARGETARCH
+COPY ./files/SpeechSDK-Linux-$SPEECH_SDK_VERSION.tar.gz /tmp/
+WORKDIR /tmp
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+RUN tar xvfz SpeechSDK-Linux-$SPEECH_SDK_VERSION.tar.gz \
+  && cd SpeechSDK-Linux-$SPEECH_SDK_VERSION \
+  && cp -r include /usr/local/include/MicrosoftSpeechSDK \
+  && cp -r lib/ /usr/local/lib/MicrosoftSpeechSDK \
+  && if [ "$TARGETARCH" = "arm64" ]; then \
+    cp /usr/local/lib/MicrosoftSpeechSDK/arm64/libMicrosoft.*.so /usr/local/lib/ ; \
+  else \
+    cp /usr/local/lib/MicrosoftSpeechSDK/x64/libMicrosoft.*.so /usr/local/lib/ ; \
+  fi \
+  && ls -lrt /usr/local/lib/    
 
+FROM base AS base-cmake
+ARG TARGETARCH
+WORKDIR /usr/local/src
+RUN ARCH=$(uname -m) && \
+    if [ "$TARGETARCH" = "arm64" ]; then \
+        wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-aarch64.sh; \
+    else \
+        wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh; \
+    fi && \
+    chmod +x cmake-${CMAKE_VERSION}-linux-*.sh && \
+    ./cmake-${CMAKE_VERSION}-linux-*.sh --skip-license --prefix=/usr/local && \
+    rm -f cmake-${CMAKE_VERSION}-linux-*.sh && \
+    cmake --version
+
+FROM base-cmake AS websockets
+COPY ./files/ops-ws.c.patch /tmp/
+WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+RUN git clone --depth 1 -b $LIBWEBSOCKETS_VERSION https://github.com/warmcat/libwebsockets.git \
+    && cd /usr/local/src/libwebsockets/lib/roles/ws \
+    && cp /tmp/ops-ws.c.patch . \
+    && patch ops-ws.c < ops-ws.c.patch \
+    && cd /usr/local/src/libwebsockets \
+    && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && make && make install
+    
+FROM base-cmake AS aws-sdk
+WORKDIR /usr/local/src
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
+  && echo "Building aws-c-common" \
+  && cmake --version \
+  && cd aws-c-common \
+  && mkdir -p build && cd build \
+  && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-Wno-error" -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error" \
+  && make -j ${BUILD_CPUS} && make install 
+RUN echo "cloning aws-crt-cpp" && git clone --depth 1 --recursive  https://github.com/awslabs/aws-crt-cpp.git \
+  && echo "Building aws-crt-cpp" \
+  && cd aws-crt-cpp \
+  && mkdir -p build && cd build \
+  && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON  -DCMAKE_C_FLAGS="-Wno-error" -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error" \
+  && make -j ${BUILD_CPUS} && make install \
+  && cd /usr/local/src 
+RUN echo "Cloning aws-sdk-cpp" \
+  && git clone --depth 1 --recursive -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
+  && cd aws-sdk-cpp \
+  && mkdir -p build && cd build \
+  && echo "Running initial cmake to let it fail" \
+  && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" \
+              -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+              -DBUILD_SHARED_LIBS=ON \
+              -DCMAKE_C_FLAGS="-Wno-error" \
+              -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds -Wno-error=nonnull" || true \
+  && cd ../ \
+  && echo "Patching source files to fix warnings treated as errors" \
+  && sed -i 's/uint8_t arr\[16\];/uint8_t arr\[16\] = {0};/g' $(find . -name byte_buf_test.c) \
+  && sed -i 's/char filename_array\[64\];/char filename_array\[64\] = {0};/g' $(find . -name logging_test_utilities.c)
+RUN cd aws-sdk-cpp/build \
+  && echo "Re-running cmake after patching" \
+  && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" \
+              -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+              -DBUILD_SHARED_LIBS=ON \
+              -DCMAKE_C_FLAGS="-Wno-error" \
+              -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized -Wno-error=array-bounds -Wno-error=nonnull" \
+  && make -j ${BUILD_CPUS} && make install \
+  && mkdir -p /usr/local/lib/pkgconfig \
+  && find /usr/local/src/aws-sdk-cpp/ -type f -name "*.pc" | xargs cp -t /usr/local/lib/pkgconfig/
+    
 FROM base-cmake AS grpc
 WORKDIR /usr/local/src
 RUN git clone --depth 1 -b $GRPC_VERSION https://github.com/grpc/grpc && cd grpc \
@@ -100,28 +173,6 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 RUN git clone --depth 1 -b main https://github.com/drachtio/verbio-asr-grpc-api.git \
     && cd verbio-asr-grpc-api \
     && LANGUAGE=cpp make
-        
-FROM base-cmake AS websockets
-COPY ./files/ops-ws.c.patch /tmp/
-WORKDIR /usr/local/src
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 -b $LIBWEBSOCKETS_VERSION https://github.com/warmcat/libwebsockets.git \
-    && cd /usr/local/src/libwebsockets/lib/roles/ws \
-    && cp /tmp/ops-ws.c.patch . \
-    && patch ops-ws.c < ops-ws.c.patch \
-    && cd /usr/local/src/libwebsockets \
-    && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && make && make install
-
-FROM base AS speechsdk
-COPY ./files/SpeechSDK-Linux-$SPEECH_SDK_VERSION.tar.gz /tmp/
-WORKDIR /tmp
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN tar xvfz SpeechSDK-Linux-$SPEECH_SDK_VERSION.tar.gz \
-    && cd SpeechSDK-Linux-$SPEECH_SDK_VERSION \
-    && cp -r include /usr/local/include/MicrosoftSpeechSDK \
-    && cp -r lib/ /usr/local/lib/MicrosoftSpeechSDK \
-    && cp /usr/local/lib/MicrosoftSpeechSDK/x64/libMicrosoft.*.so /usr/local/lib/ \
-    && ls -lrt /usr/local/lib/
 
 FROM base AS freeswitch-modules
 WORKDIR /usr/local/src
@@ -147,45 +198,10 @@ RUN git clone --depth 1 https://github.com/dpirch/libfvad.git \
     && cd libfvad \
     && autoreconf -i && ./configure && make -j ${BUILD_CPUS} && make install
 
-FROM base-cmake AS aws-sdk-cpp
-WORKDIR /usr/local/src
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 -b $AWS_SDK_CPP_VERSION https://github.com/aws/aws-sdk-cpp.git \
-    && cd aws-sdk-cpp \
-    && git submodule update --init --recursive
-RUN cd /usr/local/src/aws-sdk-cpp \
-    && mkdir -p build && cd build \
-    && cmake .. -DBUILD_ONLY="lexv2-runtime;transcribestreaming" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-Wno-unused-parameter -Wno-error=nonnull -Wno-error=deprecated-declarations -Wno-error=uninitialized -Wno-error=maybe-uninitialized" \
-    && make -j ${BUILD_CPUS} && make install \
-    && mkdir -p /usr/local/lib/pkgconfig \
-    && find /usr/local/src/aws-sdk-cpp/ -type f -name "*.pc" | xargs cp -t /usr/local/lib/pkgconfig/
-
-FROM base-cmake AS aws-c-common
-WORKDIR /usr/local/src
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 https://github.com/awslabs/aws-c-common.git \
-    && cd aws-c-common \
-    && mkdir -p build && cd build \
-    && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=OFF -DCMAKE_CXX_FLAGS="-Wno-unused-parameter" \
-    && make -j ${BUILD_CPUS} && make install
-
-FROM base-cmake AS aws-crt-cpp
-WORKDIR /usr/local/src
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-RUN git clone --depth 1 https://github.com/awslabs/aws-crt-cpp.git \
-    && cd aws-crt-cpp \
-    && mkdir -p build && cd build \
-    && cmake .. -DBUILD_DEPS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH=/usr/local/lib -DUSE_OPENSSL=ON \
-    && make -j ${BUILD_CPUS} && make install
-    
 FROM base AS freeswitch
 COPY ./files/ /tmp/
-COPY --from=aws-c-common /usr/local/include/ /usr/local/include/
-COPY --from=aws-c-common /usr/local/lib/ /usr/local/lib/
-COPY --from=aws-crt-cpp /usr/local/include/ /usr/local/include/
-COPY --from=aws-crt-cpp /usr/local/lib/ /usr/local/lib/
-COPY --from=aws-sdk-cpp /usr/local/include/ /usr/local/include/
-COPY --from=aws-sdk-cpp /usr/local/lib/ /usr/local/lib/
+COPY --from=aws-sdk /usr/local/include/ /usr/local/include/
+COPY --from=aws-sdk /usr/local/lib/ /usr/local/lib/
 COPY --from=grpc /usr/local/include/ /usr/local/include/
 COPY --from=grpc /usr/local/lib/ /usr/local/lib/
 COPY --from=libfvad /usr/local/include/ /usr/local/include/
@@ -249,8 +265,8 @@ RUN cd /usr/local/src/freeswitch \
     && cp /tmp/dialplan/* /usr/local/freeswitch/conf/dialplan/ \
     && cp /tmp/sip_profiles/* /usr/local/freeswitch/conf/sip_profiles/ \
     && cp /usr/local/src/freeswitch/conf/vanilla/autoload_configs/modules.conf.xml /usr/local/freeswitch/conf/autoload_configs \
-	  && sed -i -e 's/global_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/global_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml \
-	  && sed -i -e 's/outbound_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/outbound_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml
+    && sed -i -e 's/global_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/global_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml \
+    && sed -i -e 's/outbound_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/outbound_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml
 
 FROM debian:bookworm-slim AS final
 ARG TARGETARCH
