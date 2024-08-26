@@ -36,7 +36,8 @@ docker buildx build \
   --build-arg AWS_SDK_CPP_VERSION="${awsSdkCppVersion}" \
   --build-arg FREESWITCH_MODULES_VERSION="${freeswitchModulesVersion}" \
   --build-arg FREESWITCH_VERSION="${freeswitchVersion}" \
-  -t "${imageName}:${imageTag}" . 
+  -t "${imageName}:${imageTag}" \
+  --push .
 
 # Optional: remove the builder after the build to clean up
 docker buildx rm mybuilder
