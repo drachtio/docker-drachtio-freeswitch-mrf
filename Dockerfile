@@ -274,12 +274,14 @@ RUN cd /usr/local/src/freeswitch \
     COPY --from=freeswitch /usr/local/bin/ /usr/local/bin/
     COPY --from=freeswitch /usr/local/lib/ /usr/local/lib/
     
-    # Use separate COPY instructions for each architecture
-    RUN if [ "$TARGETARCH" = "arm64" ]; then \
-          mkdir -p /usr/lib/aarch64-linux-gnu && cp -r /usr/lib/aarch64-linux-gnu/* /usr/lib/; \
+    # Use rsync to handle architecture-specific libraries without copying symlinks to themselves
+    RUN apt-get update && apt-get install -y rsync && \
+        if [ "$TARGETARCH" = "arm64" ]; then \
+          rsync -a --ignore-existing /usr/lib/aarch64-linux-gnu/ /usr/lib/; \
         elif [ "$TARGETARCH" = "amd64" ]; then \
-          mkdir -p /usr/lib/x86_64-linux-gnu && cp -r /usr/lib/x86_64-linux-gnu/* /usr/lib/; \
-        fi
+          rsync -a --ignore-existing /usr/lib/x86_64-linux-gnu/ /usr/lib/; \
+        fi && \
+        apt-get remove --purge -y rsync && apt-get autoremove -y
     
     RUN apt update && apt install -y --quiet --no-install-recommends ca-certificates libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff6 libopus0 libsndfile1 libshout3 \
         && ldconfig && rm -rf /var/lib/apt/lists/*
