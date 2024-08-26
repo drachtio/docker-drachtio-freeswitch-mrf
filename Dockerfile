@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim AS base
 
-ARG BUILD_CPUS=1
+ARG BUILD_CPUS=16
 
 ## # this will be populated from the vaule in .env file
 ARG CMAKE_VERSION 
