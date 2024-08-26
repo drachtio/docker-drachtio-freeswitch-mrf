@@ -274,7 +274,13 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then LIB_DIR=/usr/lib/aarch64-linux-gnu; fi
 COPY --from=freeswitch /usr/local/freeswitch/ /usr/local/freeswitch/
 COPY --from=freeswitch /usr/local/bin/ /usr/local/bin/
 COPY --from=freeswitch /usr/local/lib/ /usr/local/lib/
-COPY --from=freeswitch $LIB_DIR/ /usr/lib/
+
+# Use environment variable LIB_DIR for the correct path based on architecture
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+      COPY --from=freeswitch /usr/lib/aarch64-linux-gnu/ /usr/lib/; \
+    else \
+      COPY --from=freeswitch /usr/lib/x86_64-linux-gnu/ /usr/lib/; \
+    fi
 RUN apt update && apt install -y --quiet --no-install-recommends ca-certificates libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff6 libopus0 libsndfile1 libshout3 \
     && ldconfig && rm -rf /var/lib/apt/lists/*
 
