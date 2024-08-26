@@ -267,34 +267,34 @@ RUN cd /usr/local/src/freeswitch \
     && sed -i -e 's/global_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/global_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml \
     && sed -i -e 's/outbound_codec_prefs=OPUS,G722,PCMU,PCMA,H264,VP8/outbound_codec_prefs=PCMU,PCMA,OPUS,G722/g' /usr/local/freeswitch/conf/vars.xml
 
-FROM debian:bookworm-slim AS final
-ARG TARGETARCH
-ENV LIB_DIR=/usr/lib/x86_64-linux-gnu
-RUN if [ "$TARGETARCH" = "arm64" ]; then LIB_DIR=/usr/lib/aarch64-linux-gnu; fi
-COPY --from=freeswitch /usr/local/freeswitch/ /usr/local/freeswitch/
-COPY --from=freeswitch /usr/local/bin/ /usr/local/bin/
-COPY --from=freeswitch /usr/local/lib/ /usr/local/lib/
-
-# Use environment variable LIB_DIR for the correct path based on architecture
-RUN if [ "$TARGETARCH" = "arm64" ]; then \
-      COPY --from=freeswitch /usr/lib/aarch64-linux-gnu/ /usr/lib/; \
-    else \
-      COPY --from=freeswitch /usr/lib/x86_64-linux-gnu/ /usr/lib/; \
-    fi
-RUN apt update && apt install -y --quiet --no-install-recommends ca-certificates libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff6 libopus0 libsndfile1 libshout3 \
-    && ldconfig && rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/usr/local/freeswitch/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
-
-COPY ./entrypoint.sh /entrypoint.sh
-COPY ./vars_diff.xml  /usr/local/freeswitch/conf/vars_diff.xml
-COPY ./freeswitch.xml /usr/local/freeswitch/conf/freeswitch.xml
-
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["freeswitch"]
-
-# Volumes for persistent data
-VOLUME ["/usr/local/freeswitch/log", "/usr/local/freeswitch/recordings", "/usr/local/freeswitch/sounds"]
+    FROM debian:bookworm-slim AS final
+    ARG TARGETARCH
+    
+    COPY --from=freeswitch /usr/local/freeswitch/ /usr/local/freeswitch/
+    COPY --from=freeswitch /usr/local/bin/ /usr/local/bin/
+    COPY --from=freeswitch /usr/local/lib/ /usr/local/lib/
+    
+    # Use separate COPY instructions for each architecture
+    RUN if [ "$TARGETARCH" = "arm64" ]; then \
+          mkdir -p /usr/lib/aarch64-linux-gnu && cp -r /usr/lib/aarch64-linux-gnu/* /usr/lib/; \
+        elif [ "$TARGETARCH" = "amd64" ]; then \
+          mkdir -p /usr/lib/x86_64-linux-gnu && cp -r /usr/lib/x86_64-linux-gnu/* /usr/lib/; \
+        fi
+    
+    RUN apt update && apt install -y --quiet --no-install-recommends ca-certificates libsqlite3-0 libcurl4 libpcre3 libspeex1 libspeexdsp1 libedit2 libtiff6 libopus0 libsndfile1 libshout3 \
+        && ldconfig && rm -rf /var/lib/apt/lists/*
+    
+    ENV PATH="/usr/local/freeswitch/bin:${PATH}"
+    ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
+    
+    COPY ./entrypoint.sh /entrypoint.sh
+    COPY ./vars_diff.xml /usr/local/freeswitch/conf/vars_diff.xml
+    COPY ./freeswitch.xml /usr/local/freeswitch/conf/freeswitch.xml
+    
+    RUN chmod +x /entrypoint.sh
+    
+    ENTRYPOINT ["/entrypoint.sh"]
+    CMD ["freeswitch"]
+    
+    # Volumes for persistent data
+    VOLUME ["/usr/local/freeswitch/log", "/usr/local/freeswitch/recordings", "/usr/local/freeswitch/sounds"]
