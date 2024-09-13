@@ -105,7 +105,6 @@ while :; do
     if [ -n "$2" ]; then
       sed -i -e 's/value="Jambonz-Mediaserver"/value="'$2'-Mediaserver"/g' /usr/local/freeswitch/conf/sip_profiles/mrf.xml
     fi
-    fi
     shift
     shift
     ;;
