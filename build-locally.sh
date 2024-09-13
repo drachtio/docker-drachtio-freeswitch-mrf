@@ -16,6 +16,9 @@ awsSdkCppVersion=$(grep awsSdkCppVersion .env | awk -F '=' '{print $2}')
 freeswitchModulesVersion=$(grep freeswitchModulesVersion .env | awk -F '=' '{print $2}')
 freeswitchVersion=$(grep freeswitchVersion .env | awk -F '=' '{print $2}')
 
+dockerImageRepo=$(grep dockerImageRepo .env | awk -F '=' '{print $2}')
+dockerImageVersion=$(grep dockerImageVersion .env | awk -F '=' '{print $2}')
+
 docker build \
   --build-arg CMAKE_VERSION="${cmakeVersion}" \
   --build-arg GRPC_VERSION="${grpcVersion}" \
@@ -26,4 +29,4 @@ docker build \
   --build-arg AWS_SDK_CPP_VERSION="${awsSdkCppVersion}" \
   --build-arg FREESWITCH_MODULES_VERSION="${freeswitchModulesVersion}" \
   --build-arg FREESWITCH_VERSION="${freeswitchVersion}" \
-  .
+  . --tag "${dockerImageRepo}:${dockerImageVersion}"

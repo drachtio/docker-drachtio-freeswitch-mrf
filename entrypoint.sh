@@ -103,7 +103,7 @@ while :; do
 
   --username)
     if [ -n "$2" ]; then
-      sed -i -e "s/name=\"username\" value=\"Jambonz\"/name=\"username\" value=\"$2\"/g" /usr/local/freeswitch/conf/sip_profiles/mrf.xml
+      sed -i -e 's/value="Jambonz-Mediaserver"/value="'$2'-Mediaserver"/g' /usr/local/freeswitch/conf/sip_profiles/mrf.xml
     fi
     shift
     shift
