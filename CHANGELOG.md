@@ -1,5 +1,5 @@
 ### 0.9.2 (2024-09-13)
-- fix replacement in `entrypoint.sh` to set the `Mediaserver` name via `--username`
+- fix replacement in `entrypoint.sh` to set the `Mediaserver` name correctly via `--username`
 - improve `build-locally.sh` and add a tag to the docker image with `repo:version` from `.env` file
 
 ### 0.9.1 (2024-06-08)
