@@ -4,6 +4,7 @@ ARG BUILD_CPUS=1
 
 ## # this will be populated from the vaule in .env file
 ARG CMAKE_VERSION 
+ARG TARGETARCH
 ARG GRPC_VERSION
 ARG LIBWEBSOCKETS_VERSION
 ARG SPEECH_SDK_VERSION
@@ -38,13 +39,20 @@ RUN for i in $(seq 1 8); do mkdir -p "/usr/share/man/man${i}"; done \
   	&& git config --global https.postBuffer 524288000 \
 	  && git config --global pull.rebase true
 
-FROM base AS base-cmake
-WORKDIR /usr/local/src
-RUN export CMAKE_VERSION=$CMAKE_VERSION \
-    && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh \
-    && chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh \
-    && ./cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license --prefix=/usr/local \
-    && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.sh \
+    FROM base AS base-cmake
+    WORKDIR /usr/local/src
+    RUN export CMAKE_VERSION=$CMAKE_VERSION \
+    && if [ "$TARGETARCH" = "amd64" ]; then \
+        CMAKE_URL=https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+        CMAKE_URL=https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-aarch64.sh; \
+    else \
+        echo "Unsupported architecture: $TARGETARCH" && exit 1; \
+    fi \
+    && wget $CMAKE_URL \
+    && chmod +x cmake-${CMAKE_VERSION}-linux-*.sh \
+    && ./cmake-${CMAKE_VERSION}-linux-*.sh --skip-license --prefix=/usr/local \
+    && rm -f cmake-${CMAKE_VERSION}-linux-*.sh \
     && cmake --version
 
 FROM base-cmake AS grpc
