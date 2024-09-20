@@ -7,6 +7,8 @@ if [ ! -f ".env" ]; then
 fi
 
 cmakeVersion=$(grep cmakeVersion .env | awk -F '=' '{print $2}')
+echo $cmakeVersion
+
 grpcVersion=$(grep grpcVersion .env | awk -F '=' '{print $2}')
 libwebsocketsVersion=$(grep libwebsocketsVersion .env | awk -F '=' '{print $2}')
 speechSdkVersion=$(grep speechSdkVersion .env | awk -F '=' '{print $2}')
