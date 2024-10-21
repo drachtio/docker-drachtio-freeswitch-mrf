@@ -1,0 +1,63 @@
+image: docker:20.10.16
+
+services:
+  - docker:20.10.16-dind
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+
+stages:
+  - build
+
+build_and_push:
+  stage: build
+  only:
+    - main
+    - tags
+  script:
+    - |
+      echo "Disk space before cleanup:"
+      df -h
+      rm -rf /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/lib/android/sdk/ndk /usr/share/dotnet /opt/ghc /usr/local/share/boost
+      apt-get clean
+      echo "Disk space after cleanup:"
+      df -h
+
+    - |
+      for var in cmakeVersion grpcVersion libwebsocketsVersion speechSdkVersion spandspVersion sofiaVersion awsSdkCppVersion freeswitchModulesVersion freeswitchVersion; do
+        value=$(grep "$var" .env | cut -d'=' -f2)
+        export $var=$value
+      done
+
+    - |
+      IMAGE_ID=drachtio/drachtio-freeswitch-mrf
+      VERSION=${CI_COMMIT_REF_NAME}
+      [[ "$CI_COMMIT_REF_NAME" == "main" ]] && VERSION=latest
+      [[ "$CI_COMMIT_TAG" ]] && VERSION=${CI_COMMIT_TAG#v}
+      echo IMAGE_ID=$IMAGE_ID
+      echo VERSION=$VERSION
+
+    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
+    - docker buildx create --use
+
+    - |
+      docker buildx build \
+        --platform linux/amd64,linux/arm64 \
+        --tag $IMAGE_ID:$VERSION \
+        --build-arg BUILD_CPUS=16 \
+        --build-arg CMAKE_VERSION=$cmakeVersion \
+        --build-arg GRPC_VERSION=$grpcVersion \
+        --build-arg LIBWEBSOCKETS_VERSION=$libwebsocketsVersion \
+        --build-arg SPEECH_SDK_VERSION=$speechSdkVersion \
+        --build-arg SPANDSP_VERSION=$spandspVersion \
+        --build-arg SOFIA_VERSION=$sofiaVersion \
+        --build-arg AWS_SDK_CPP_VERSION=$awsSdkCppVersion \
+        --build-arg FREESWITCH_MODULES_VERSION=$freeswitchModulesVersion \
+        --build-arg FREESWITCH_VERSION=$freeswitchVersion \
+        --push \
+        .
+
+  variables:
+    DOCKERHUB_USERNAME: $DOCKERHUB_USERNAME
+    DOCKERHUB_TOKEN: $DOCKERHUB_TOKEN
